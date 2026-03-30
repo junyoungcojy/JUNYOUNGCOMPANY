@@ -43,7 +43,7 @@ body{font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',sans-serif;backgrou
 .sec-lbl{font-size:10px;font-weight:600;color:var(--text3);letter-spacing:.8px;text-transform:uppercase;margin-bottom:10px}
 input,select,textarea{width:100%;padding:9px 11px;border:0.5px solid var(--border2);border-radius:var(--radius-sm);font-size:13px;background:var(--bg);color:var(--text);outline:none;font-family:inherit;margin-bottom:7px;-webkit-appearance:none}
 input:focus,select:focus,textarea:focus{border-color:var(--text);box-shadow:0 0 0 2px rgba(0,0,0,0.06)}
-textarea{resize:vertical;min-height:48px}
+textarea{resize:vertical;min-height:80px}
 .btn{padding:9px 14px;border-radius:var(--radius-sm);border:0.5px solid var(--border2);background:var(--bg2);font-size:12px;font-weight:500;cursor:pointer;color:var(--text);font-family:inherit;white-space:nowrap;transition:all .12s}
 .btn:hover{background:var(--bg3)}
 .btn-dark{background:var(--text);color:var(--bg);border-color:var(--text)}.btn-dark:hover{opacity:.85}
@@ -52,7 +52,6 @@ textarea{resize:vertical;min-height:48px}
 .loading{text-align:center;padding:40px;color:var(--text3);font-size:13px}
 .offline-bar{background:var(--redbg);color:var(--red);text-align:center;font-size:11px;padding:6px;border-radius:8px;margin-bottom:10px;display:none}
 .offline-bar.show{display:block}
-/* TASKS */
 .task-date-nav{display:flex;align-items:center;gap:10px;margin-bottom:14px}
 .task-date-lbl{flex:1;font-size:16px;font-weight:600;color:var(--text)}
 .task-date-sub{font-size:11px;color:var(--text3);margin-top:1px}
@@ -80,7 +79,6 @@ textarea{resize:vertical;min-height:48px}
 .task-add-row{display:flex;gap:6px;margin-top:10px}
 .task-add-row input{flex:1;margin-bottom:0}
 .task-add-row button{flex-shrink:0;margin-bottom:0}
-/* CALENDAR */
 .cal-layout{display:grid;grid-template-columns:1fr 260px;gap:10px}
 @media(max-width:600px){.cal-layout{grid-template-columns:1fr}}
 .cal-nav{display:flex;align-items:center;justify-content:space-between;margin-bottom:12px}
@@ -105,7 +103,6 @@ textarea{resize:vertical;min-height:48px}
 .ev-date{font-size:10px;color:var(--text2);margin-top:2px}
 .ev-del{background:none;border:none;color:var(--text3);cursor:pointer;font-size:13px}
 .ev-del:hover{color:var(--red)}
-/* OFF */
 .stat-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:8px;margin-bottom:12px}
 .stat-box{background:var(--bg2);border-radius:10px;padding:12px;text-align:center}
 .stat-num{font-size:22px;font-weight:600;color:var(--text)}
@@ -135,23 +132,20 @@ textarea{resize:vertical;min-height:48px}
 .inv-wh-tab.active{background:var(--blue);color:#fff;border-color:var(--blue)}
 .inv-wh-tab:hover:not(.active){background:var(--bg2)}
 .inv-paste-area{border:1.5px dashed var(--border2);border-radius:var(--radius);padding:16px;background:var(--bg2);margin-bottom:10px}
-.inv-paste-area textarea{border:none;background:transparent;font-size:12px;min-height:80px;resize:vertical;margin-bottom:8px;padding:4px}
-.inv-paste-area textarea:focus{box-shadow:none;border:none}
-.inv-paste-hint{font-size:10px;color:var(--text3);margin-bottom:8px}
+.inv-paste-hint{font-size:11px;color:var(--text3);margin-bottom:8px}
 .inv-table-wrap{overflow-x:auto;border-radius:10px;border:0.5px solid var(--border)}
-.inv-table{width:100%;border-collapse:collapse;font-size:12px;min-width:400px}
+.inv-table{width:100%;border-collapse:collapse;font-size:12px}
 .inv-table th{background:var(--bg2);padding:8px 10px;text-align:left;font-weight:600;font-size:11px;color:var(--text2);border-bottom:0.5px solid var(--border);white-space:nowrap}
-.inv-table td{padding:7px 10px;border-bottom:0.5px solid var(--border);color:var(--text);vertical-align:middle}
+.inv-table td{padding:7px 10px;border-bottom:0.5px solid var(--border);color:var(--text);vertical-align:middle;white-space:nowrap}
 .inv-table tr:last-child td{border-bottom:none}
 .inv-table tr:hover td{background:var(--bg2)}
-.inv-table .highlight{background:rgba(255,200,0,0.25)}
-.inv-empty{text-align:center;padding:32px;color:var(--text3);font-size:12px}
 .inv-meta{display:flex;align-items:center;justify-content:space-between;margin-bottom:8px;flex-wrap:wrap;gap:6px}
 .inv-meta-lbl{font-size:11px;color:var(--text3)}
 .inv-row-count{font-size:11px;background:var(--bg2);color:var(--text2);padding:2px 8px;border-radius:8px}
-.search-result-card{background:var(--bg);border:0.5px solid var(--border);border-radius:10px;padding:12px;margin-bottom:8px}
-.search-result-wh{font-size:10px;font-weight:600;background:var(--bluebg);color:var(--blue);padding:2px 8px;border-radius:8px;display:inline-block;margin-bottom:6px}
-.search-highlight{background:rgba(255,200,0,0.35);border-radius:2px;padding:0 1px}
+.search-result-card{background:var(--bg);border:0.5px solid var(--border);border-radius:10px;padding:10px;margin-bottom:8px}
+.search-wh-badge{font-size:10px;font-weight:600;background:var(--bluebg);color:var(--blue);padding:2px 8px;border-radius:8px;display:inline-block;margin-bottom:6px}
+.hl{background:rgba(255,200,0,0.32);border-radius:2px;padding:0 1px}
+.inv-saving{font-size:11px;color:var(--text3);padding:8px;text-align:center}
 </style>
 </head>
 <body>
@@ -174,7 +168,6 @@ textarea{resize:vertical;min-height:48px}
     <div class="tab" onclick="sw('inventory')">재고 관리</div>
   </div>
 
-  <!-- 당일과제 -->
   <div id="panel-tasks" class="panel active">
     <div class="task-date-nav">
       <button class="task-nav-btn" onclick="chDay(-1)">‹</button>
@@ -188,7 +181,6 @@ textarea{resize:vertical;min-height:48px}
     <div id="task-sections"><div class="loading">불러오는 중...</div></div>
   </div>
 
-  <!-- 할일 캘린더 -->
   <div id="panel-calendar" class="panel">
     <div class="cal-layout">
       <div class="card" style="margin-bottom:0">
@@ -227,7 +219,6 @@ textarea{resize:vertical;min-height:48px}
     </div>
   </div>
 
-  <!-- 휴무 관리 -->
   <div id="panel-off" class="panel">
     <div class="stat-grid" id="off-stats"></div>
     <div class="today-off-card" id="today-off-card"></div>
@@ -247,11 +238,10 @@ textarea{resize:vertical;min-height:48px}
     </div>
   </div>
 
-  <!-- 재고 관리 -->
   <div id="panel-inventory" class="panel">
     <div class="inv-search-wrap">
       <span class="inv-search-icon">🔍</span>
-      <input type="text" id="inv-search" placeholder="전체 창고 검색 — 상품명, 색상, 사이즈 등" oninput="searchInv()">
+      <input type="text" id="inv-search" placeholder="전체 창고 검색 — 상품명, 품번, 컬러, 사이즈 등" oninput="searchInv()">
     </div>
     <div id="inv-search-results"></div>
     <div class="inv-wh-tabs" id="inv-wh-tabs"></div>
@@ -262,6 +252,7 @@ textarea{resize:vertical;min-height:48px}
 <script type="module">
 import { initializeApp } from "https://www.gstatic.com/firebasejs/10.12.0/firebase-app.js";
 import { getFirestore, doc, getDoc, setDoc, onSnapshot } from "https://www.gstatic.com/firebasejs/10.12.0/firebase-firestore.js";
+
 const firebaseConfig = {
   apiKey: "AIzaSyBgdV3uZDrQiibjy5Ixn2iA_pPOwg6CxgA",
   authDomain: "northface-chungjung.firebaseapp.com",
@@ -270,64 +261,135 @@ const firebaseConfig = {
   messagingSenderId: "475467571780",
   appId: "1:475467571780:web:ea1399d99f939d26391211"
 };
+
 const app = initializeApp(firebaseConfig);
 const db = getFirestore(app);
-const ROLE_COLORS = {점장:'#1565c0',시니어:'#6a1b9a',주니어:'#2e7d32',파트:'#e65100'};
-const EV_COLORS = {store:'#c62828',task:'#1565c0',meet:'#7b1fa2',stock:'#2e7d32',clean:'#e65100',etc:'#5d4037'};
-const EV_LABELS = {store:'매장',task:'업무',meet:'미팅',stock:'재고',clean:'청소',etc:'기타'};
-const WH_NAMES = ['매장','지하2층','지하3층','지하4층','외부'];
 
-const todayRaw = new Date();
-const todayStr = fmt(todayRaw);
-let calY=todayRaw.getFullYear(), calM=todayRaw.getMonth();
-let offY=todayRaw.getFullYear(), offM=todayRaw.getMonth();
+const ROLE_COLORS={점장:'#1565c0',시니어:'#6a1b9a',주니어:'#2e7d32',파트:'#e65100'};
+const EV_COLORS={store:'#c62828',task:'#1565c0',meet:'#7b1fa2',stock:'#2e7d32',clean:'#e65100',etc:'#5d4037'};
+const EV_LABELS={store:'매장',task:'업무',meet:'미팅',stock:'재고',clean:'청소',etc:'기타'};
+const WH_NAMES=['매장','지하2층','지하3층','지하4층','외부'];
+
+const todayRaw=new Date();
+const todayStr=fmt(todayRaw);
+let calY=todayRaw.getFullYear(),calM=todayRaw.getMonth();
+let offY=todayRaw.getFullYear(),offM=todayRaw.getMonth();
 let taskDt=new Date(todayRaw);
 let curWh=0;
-let DB={staff:[],off:{},events:[],tasks:{},inventory:{},files:[]};
-let saving=false;
+
+// 메인 DB (직원/일정/과제)
+let DB={staff:[],off:{},events:[],tasks:{}};
+// 창고별 재고 — 별도 관리
+let INV={};
+let savingMain=false;
+let savingInv={};
 
 function fmt(d){return d.getFullYear()+'-'+p2(d.getMonth()+1)+'-'+p2(d.getDate())}
 function p2(n){return String(n).padStart(2,'0')}
 function dow(s){return['일','월','화','수','목','금','토'][new Date(s+'T00:00:00').getDay()]}
 function esc(s){return String(s||'').replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;').replace(/"/g,'&quot;')}
 
-const docRef=doc(db,'store','main');
-async function loadFromFirebase(){
+// 문서 참조 — 메인 1개 + 창고별 5개
+const mainRef=doc(db,'store','main');
+function whRef(wh){return doc(db,'store','inv_'+wh);}
+
+// ── 메인 로드/저장 ──
+async function loadMain(){
   try{
-    const snap=await getDoc(docRef);
+    const snap=await getDoc(mainRef);
     if(snap.exists()){
       const d=snap.data();
-      DB={staff:d.staff||defaultStaff(),off:d.off||{},events:d.events||[],tasks:d.tasks||{},inventory:d.inventory||{},files:d.files||[]};
-    } else {DB.staff=defaultStaff();await saveToFirebase();}
-    setSyncOk();renderAll();
-  }catch(e){setSyncErr();loadLocal();renderAll();}
+      DB={staff:d.staff||defaultStaff(),off:d.off||{},events:d.events||[],tasks:d.tasks||{}};
+    } else {
+      DB.staff=defaultStaff();
+      await saveMain();
+    }
+    setSyncOk();
+    renderMain();
+  }catch(e){setSyncErr();loadLocalMain();renderMain();}
 }
+
+async function saveMain(){
+  if(savingMain)return;savingMain=true;
+  try{await setDoc(mainRef,DB);saveLocalMain();setSyncOk();}
+  catch(e){setSyncErr();saveLocalMain();}
+  savingMain=false;
+}
+
+// ── 창고별 로드/저장 ──
+async function loadWh(wh){
+  try{
+    const snap=await getDoc(whRef(wh));
+    if(snap.exists()){INV[wh]=snap.data();}
+    else{INV[wh]={headers:[],rows:[],updatedAt:''};}
+  }catch(e){
+    const local=loadLocalInv(wh);
+    INV[wh]=local||{headers:[],rows:[],updatedAt:''};
+  }
+}
+
+async function saveWh(wh){
+  if(savingInv[wh])return;savingInv[wh]=true;
+  document.getElementById('inv-wh-panel').innerHTML='<div class="inv-saving">저장 중... ('+INV[wh].rows.length+'행)</div>';
+  try{
+    await setDoc(whRef(wh),INV[wh]);
+    saveLocalInv(wh,INV[wh]);
+    setSyncOk();
+  }catch(e){
+    setSyncErr();
+    saveLocalInv(wh,INV[wh]);
+    alert('저장 실패: 데이터가 너무 클 수 있습니다. 행 수를 줄여보세요.');
+  }
+  savingInv[wh]=false;
+  renderInv();
+}
+
+async function loadAllWh(){
+  await Promise.all(WH_NAMES.map(wh=>loadWh(wh)));
+}
+
+// 실시간 수신 — 메인
+onSnapshot(mainRef,(snap)=>{
+  if(snap.exists()&&!savingMain){
+    const d=snap.data();
+    DB={staff:d.staff||DB.staff,off:d.off||{},events:d.events||[],tasks:d.tasks||{}};
+    setSyncOk();renderMain();
+  }
+},()=>{setSyncErr();});
+
+// 실시간 수신 — 현재 보고 있는 창고
+let whUnsubscribe=null;
+function subscribeWh(wh){
+  if(whUnsubscribe)whUnsubscribe();
+  whUnsubscribe=onSnapshot(whRef(wh),(snap)=>{
+    if(snap.exists()&&!savingInv[wh]){
+      INV[wh]=snap.data();
+      if(document.getElementById('panel-inventory').classList.contains('active'))renderInv();
+    }
+  },()=>{});
+}
+
 function defaultStaff(){return [{id:'s1',role:'점장',name:'장준영'},{id:'s2',role:'시니어',name:'공석'},{id:'s3',role:'주니어',name:'이아연'}];}
-async function saveToFirebase(){
-  if(saving)return;saving=true;
-  try{await setDoc(docRef,DB);saveLocal();setSyncOk();}catch(e){setSyncErr();saveLocal();}
-  saving=false;
-}
-function saveLocal(){try{localStorage.setItem('nf_store',JSON.stringify(DB))}catch(e){}}
-function loadLocal(){try{const d=JSON.parse(localStorage.getItem('nf_store')||'null');if(d)DB=d;else DB.staff=defaultStaff();}catch(e){DB.staff=defaultStaff();}}
+function saveLocalMain(){try{localStorage.setItem('nf_main',JSON.stringify(DB))}catch(e){}}
+function loadLocalMain(){try{const d=JSON.parse(localStorage.getItem('nf_main')||'null');if(d)DB=d;else DB.staff=defaultStaff();}catch(e){DB.staff=defaultStaff();}}
+function saveLocalInv(wh,data){try{localStorage.setItem('nf_inv_'+wh,JSON.stringify(data))}catch(e){}}
+function loadLocalInv(wh){try{return JSON.parse(localStorage.getItem('nf_inv_'+wh)||'null');}catch(e){return null;}}
 function setSyncOk(){document.getElementById('sync-dot').className='sync-dot ok';document.getElementById('sync-lbl').textContent='실시간 연결됨';document.getElementById('offline-bar').classList.remove('show');}
 function setSyncErr(){document.getElementById('sync-dot').className='sync-dot err';document.getElementById('sync-lbl').textContent='오프라인';document.getElementById('offline-bar').classList.add('show');}
-onSnapshot(docRef,(snap)=>{
-  if(snap.exists()&&!saving){const d=snap.data();DB={staff:d.staff||DB.staff,off:d.off||{},events:d.events||[],tasks:d.tasks||{},inventory:d.inventory||{},files:d.files||[]};setSyncOk();renderAll();}
-},()=>{setSyncErr();});
-function renderAll(){
+
+function renderMain(){
   renderTasks();
   if(document.getElementById('panel-calendar').classList.contains('active'))renderCal();
   if(document.getElementById('panel-off').classList.contains('active'))renderOff();
-  if(document.getElementById('panel-inventory').classList.contains('active'))renderInv();
 }
+
 window.sw=function(id){
   document.querySelectorAll('.tab').forEach((t,i)=>t.classList.toggle('active',['tasks','calendar','off','inventory'][i]===id));
   document.querySelectorAll('.panel').forEach(p=>p.classList.remove('active'));
   document.getElementById('panel-'+id).classList.add('active');
   if(id==='calendar')renderCal();
   if(id==='off')renderOff();
-  if(id==='inventory')renderInv();
+  if(id==='inventory'){renderInv();subscribeWh(WH_NAMES[curWh]);}
 };
 
 /* ── TASKS ── */
@@ -366,10 +428,10 @@ function getItems(ds,type,sid){
   if(!DB.tasks[ds].staff[sid])DB.tasks[ds].staff[sid]=[];
   return DB.tasks[ds].staff[sid];
 }
-window.addTask=function(ds,type,sid,inpId){const el=document.getElementById(inpId);const txt=el.value.trim();if(!txt)return;getItems(ds,type,sid).push({id:'t'+Date.now(),text:txt,done:false,doneAt:null});el.value='';saveToFirebase();renderTasks();};
-window.checkTask=function(ds,type,sid,id){const t=getItems(ds,type,sid).find(x=>x.id===id);if(!t)return;t.done=!t.done;if(t.done){const n=new Date();t.doneAt=p2(n.getHours())+':'+p2(n.getMinutes());}else t.doneAt=null;saveToFirebase();renderTasks();};
-window.checkCarry=function(ds,type,sid,prevId){const prevDs=fmt(new Date(new Date(ds+'T00:00:00').getTime()-86400000));const t=getItems(prevDs,type,sid).find(x=>x.id===prevId);if(!t)return;t.done=!t.done;if(t.done){const n=new Date();t.doneAt=p2(n.getHours())+':'+p2(n.getMinutes());}else t.doneAt=null;saveToFirebase();renderTasks();};
-window.delTask=function(ds,type,sid,id){const items=getItems(ds,type,sid);const i=items.findIndex(x=>x.id===id);if(i>-1)items.splice(i,1);saveToFirebase();renderTasks();};
+window.addTask=function(ds,type,sid,inpId){const el=document.getElementById(inpId);const txt=el.value.trim();if(!txt)return;getItems(ds,type,sid).push({id:'t'+Date.now(),text:txt,done:false,doneAt:null});el.value='';saveMain();renderTasks();};
+window.checkTask=function(ds,type,sid,id){const t=getItems(ds,type,sid).find(x=>x.id===id);if(!t)return;t.done=!t.done;if(t.done){const n=new Date();t.doneAt=p2(n.getHours())+':'+p2(n.getMinutes());}else t.doneAt=null;saveMain();renderTasks();};
+window.checkCarry=function(ds,type,sid,prevId){const prevDs=fmt(new Date(new Date(ds+'T00:00:00').getTime()-86400000));const t=getItems(prevDs,type,sid).find(x=>x.id===prevId);if(!t)return;t.done=!t.done;if(t.done){const n=new Date();t.doneAt=p2(n.getHours())+':'+p2(n.getMinutes());}else t.doneAt=null;saveMain();renderTasks();};
+window.delTask=function(ds,type,sid,id){const items=getItems(ds,type,sid);const i=items.findIndex(x=>x.id===id);if(i>-1)items.splice(i,1);saveMain();renderTasks();};
 
 /* ── CALENDAR ── */
 window.chMon=function(d){calM+=d;if(calM<0){calM=11;calY--;}if(calM>11){calM=0;calY++;}renderCal();}
@@ -406,8 +468,8 @@ function renderEvList(sel){
   if(!evs.length){list.innerHTML='<div style="font-size:11px;color:var(--text3);text-align:center;padding:14px">일정 없음</div>';return;}
   list.innerHTML=evs.map(ev=>`<div class="ev-item"><div class="ev-dot" style="background:${EV_COLORS[ev.type]||'#888'}"></div><div class="ev-body"><div class="ev-title">${esc(ev.title)}</div><div class="ev-date">${ev.date} (${dow(ev.date)}) · ${EV_LABELS[ev.type]||ev.type}</div></div><button class="ev-del" onclick="delEv('${ev.id}')">✕</button></div>`).join('');
 }
-window.addEvent=function(){const t=document.getElementById('ev-title').value.trim();const d=document.getElementById('ev-date').value;const ty=document.getElementById('ev-type').value;if(!t||!d)return;DB.events.push({id:'e'+Date.now(),title:t,date:d,type:ty});DB.events.sort((a,b)=>a.date.localeCompare(b.date));document.getElementById('ev-title').value='';saveToFirebase();renderCal();};
-window.delEv=function(id){DB.events=DB.events.filter(e=>e.id!==id);saveToFirebase();renderCal();};
+window.addEvent=function(){const t=document.getElementById('ev-title').value.trim();const d=document.getElementById('ev-date').value;const ty=document.getElementById('ev-type').value;if(!t||!d)return;DB.events.push({id:'e'+Date.now(),title:t,date:d,type:ty});DB.events.sort((a,b)=>a.date.localeCompare(b.date));document.getElementById('ev-title').value='';saveMain();renderCal();};
+window.delEv=function(id){DB.events=DB.events.filter(e=>e.id!==id);saveMain();renderCal();};
 document.getElementById('ev-date').value=todayStr;
 
 /* ── OFF ── */
@@ -431,97 +493,108 @@ function renderOff(){
     }).join('');
 }
 window.startEdit=function(sid){const s=DB.staff.find(x=>x.id===sid);if(!s)return;const w=document.getElementById('nw-'+sid);w.innerHTML=`<input class="name-edit-input" id="ni-${sid}" value="${esc(s.name)}" maxlength="10" onkeydown="if(event.key==='Enter')saveName('${sid}');if(event.key==='Escape')renderOff()"><button class="edit-btn" onclick="saveName('${sid}')">✓</button><button class="edit-btn" onclick="renderOff()">✕</button>`;setTimeout(()=>{const i=document.getElementById('ni-'+sid);if(i){i.focus();i.select();}},40);};
-window.saveName=function(sid){const i=document.getElementById('ni-'+sid);if(!i)return;const v=i.value.trim();if(!v)return;const s=DB.staff.find(x=>x.id===sid);if(s)s.name=v;saveToFirebase();renderOff();renderTasks();};
-window.addOff=function(sid){const v=document.getElementById('od-'+sid).value;if(!v)return;if(!DB.off[sid])DB.off[sid]=[];if(!DB.off[sid].includes(v)){DB.off[sid].push(v);DB.off[sid].sort();}saveToFirebase();renderOff();};
-window.removeOff=function(sid,di){DB.off[sid].splice(di,1);saveToFirebase();renderOff();};
-window.addStaff=function(){const role=document.getElementById('new-role').value;const name=document.getElementById('new-name').value.trim();if(!name)return;DB.staff.push({id:'s'+Date.now(),role,name});document.getElementById('new-name').value='';saveToFirebase();renderOff();};
-window.removeStaff=function(id){if(!confirm('직원을 삭제하시겠습니까?'))return;DB.staff=DB.staff.filter(s=>s.id!==id);delete DB.off[id];saveToFirebase();renderOff();};
+window.saveName=function(sid){const i=document.getElementById('ni-'+sid);if(!i)return;const v=i.value.trim();if(!v)return;const s=DB.staff.find(x=>x.id===sid);if(s)s.name=v;saveMain();renderOff();renderTasks();};
+window.addOff=function(sid){const v=document.getElementById('od-'+sid).value;if(!v)return;if(!DB.off[sid])DB.off[sid]=[];if(!DB.off[sid].includes(v)){DB.off[sid].push(v);DB.off[sid].sort();}saveMain();renderOff();};
+window.removeOff=function(sid,di){DB.off[sid].splice(di,1);saveMain();renderOff();};
+window.addStaff=function(){const role=document.getElementById('new-role').value;const name=document.getElementById('new-name').value.trim();if(!name)return;DB.staff.push({id:'s'+Date.now(),role,name});document.getElementById('new-name').value='';saveMain();renderOff();};
+window.removeStaff=function(id){if(!confirm('직원을 삭제하시겠습니까?'))return;DB.staff=DB.staff.filter(s=>s.id!==id);delete DB.off[id];saveMain();renderOff();};
 
 /* ── INVENTORY ── */
 function renderInv(){
-  // 창고 탭
   document.getElementById('inv-wh-tabs').innerHTML=WH_NAMES.map((n,i)=>`<div class="inv-wh-tab ${i===curWh?'active':''}" onclick="switchWh(${i})">${n}</div>`).join('');
   renderWhPanel();
 }
-window.switchWh=function(i){curWh=i;renderInv();document.getElementById('inv-search').value='';document.getElementById('inv-search-results').innerHTML='';};
+
+window.switchWh=function(i){
+  curWh=i;
+  renderInv();
+  document.getElementById('inv-search').value='';
+  document.getElementById('inv-search-results').innerHTML='';
+  subscribeWh(WH_NAMES[i]);
+};
 
 function renderWhPanel(){
   const wh=WH_NAMES[curWh];
-  const inv=DB.inventory[wh]||{rows:[],headers:[],updatedAt:''};
+  const inv=INV[wh]||{headers:[],rows:[],updatedAt:''};
   const hasData=inv.rows&&inv.rows.length>0;
   let html='';
   if(hasData){
     html+=`<div class="inv-meta">
-      <span class="inv-meta-lbl">마지막 업데이트: ${inv.updatedAt||'-'}</span>
+      <span class="inv-meta-lbl">업데이트: ${inv.updatedAt||'-'}</span>
       <span class="inv-row-count">${inv.rows.length}행</span>
     </div>`;
     html+=renderTable(inv.headers,inv.rows,'');
-    html+=`<div style="margin-top:10px;display:flex;gap:6px">
-      <button class="btn btn-sm" onclick="showPaste(${curWh})">📋 데이터 업데이트</button>
+    html+=`<div style="margin-top:10px;display:flex;gap:6px;flex-wrap:wrap">
+      <button class="btn btn-sm" onclick="showPasteBox()">📋 데이터 업데이트</button>
       <button class="btn btn-sm btn-danger" onclick="clearWh('${wh}')">초기화</button>
+    </div>
+    <div id="paste-box" style="display:none;margin-top:10px">
+      <div class="inv-paste-area">
+        <div class="inv-paste-hint">엑셀에서 복사(Ctrl+C) 후 아래에 붙여넣기(Ctrl+V)</div>
+        <textarea id="paste-ta" placeholder="여기에 붙여넣기..."></textarea>
+        <div style="display:flex;gap:6px">
+          <button class="btn btn-dark" onclick="processPaste()">저장하기</button>
+          <button class="btn" onclick="document.getElementById('paste-box').style.display='none'">취소</button>
+        </div>
+      </div>
     </div>`;
   } else {
-    html+=`<div class="inv-paste-area" id="paste-area-${curWh}">
+    html+=`<div class="inv-paste-area">
       <div class="inv-paste-hint">엑셀에서 데이터를 복사(Ctrl+C)한 후 아래에 붙여넣기(Ctrl+V) 하세요</div>
-      <textarea id="paste-ta-${curWh}" placeholder="여기에 붙여넣기 (Ctrl+V)..." onpaste="handlePaste(event,${curWh})"></textarea>
-      <button class="btn btn-dark" onclick="processPaste(${curWh})">저장하기</button>
+      <textarea id="paste-ta" placeholder="여기에 붙여넣기 (Ctrl+V)..."></textarea>
+      <button class="btn btn-dark" onclick="processPaste()">저장하기</button>
     </div>`;
   }
   document.getElementById('inv-wh-panel').innerHTML=html;
 }
 
-window.showPaste=function(whIdx){
-  const wh=WH_NAMES[whIdx];
-  const panel=document.getElementById('inv-wh-panel');
-  panel.innerHTML+=`<div class="inv-paste-area" style="margin-top:10px">
-    <div class="inv-paste-hint">새 데이터를 붙여넣으면 기존 데이터가 교체됩니다</div>
-    <textarea id="paste-ta-${whIdx}" placeholder="엑셀에서 복사 후 Ctrl+V..." onpaste="handlePaste(event,${whIdx})"></textarea>
-    <button class="btn btn-dark" onclick="processPaste(${whIdx})">저장하기</button>
-  </div>`;
+window.showPasteBox=function(){
+  const box=document.getElementById('paste-box');
+  if(box)box.style.display=box.style.display==='none'?'block':'none';
 };
 
-window.handlePaste=function(e,whIdx){
-  setTimeout(()=>processPaste(whIdx),100);
-};
-
-window.processPaste=function(whIdx){
-  const ta=document.getElementById('paste-ta-'+whIdx);
+window.processPaste=function(){
+  const ta=document.getElementById('paste-ta');
   if(!ta)return;
   const raw=ta.value.trim();
-  if(!raw)return;
-  const lines=raw.split('\n').map(l=>l.split('\t').map(c=>c.trim()));
-  if(lines.length<2){alert('최소 2줄 이상 붙여넣어 주세요 (헤더 + 데이터)');return;}
-  const headers=lines[0];
-  const rows=lines.slice(1).filter(r=>r.some(c=>c));
-  const wh=WH_NAMES[whIdx];
-  if(!DB.inventory)DB.inventory={};
-  DB.inventory[wh]={headers,rows,updatedAt:new Date().toLocaleDateString('ko-KR')+' '+new Date().toLocaleTimeString('ko-KR',{hour:'2-digit',minute:'2-digit'})};
-  saveToFirebase();
-  renderInv();
+  if(!raw){alert('붙여넣기 할 데이터가 없습니다.');return;}
+  const lines=raw.split('\n').map(l=>l.split('\t').map(c=>c.trim().replace(/\r/g,'')));
+  if(lines.length<2){alert('최소 2줄 이상 필요합니다 (헤더 + 데이터)');return;}
+  const wh=WH_NAMES[curWh];
+  const now=new Date();
+  INV[wh]={
+    headers:lines[0],
+    rows:lines.slice(1).filter(r=>r.some(c=>c)),
+    updatedAt:now.getFullYear()+'.'+(now.getMonth()+1)+'.'+now.getDate()+' '+p2(now.getHours())+':'+p2(now.getMinutes())
+  };
+  saveWh(wh);
 };
 
 window.clearWh=function(wh){
   if(!confirm(wh+' 재고를 초기화하시겠습니까?'))return;
-  if(DB.inventory)delete DB.inventory[wh];
-  saveToFirebase();renderInv();
+  INV[wh]={headers:[],rows:[],updatedAt:''};
+  saveWh(wh);
 };
 
-function renderTable(headers,rows,keyword){
+function renderTable(headers,rows,kw){
+  if(!headers||!headers.length)return '';
   let html=`<div class="inv-table-wrap"><table class="inv-table"><thead><tr>`;
-  headers.forEach(h=>{ html+=`<th>${esc(h)}</th>`; });
+  headers.forEach(h=>{html+=`<th>${esc(h)}</th>`;});
   html+=`</tr></thead><tbody>`;
+  let count=0;
   rows.forEach(row=>{
-    const matched=!keyword||row.some(c=>c.toLowerCase().includes(keyword.toLowerCase()));
-    if(!matched)return;
+    if(kw&&!row.some(c=>String(c).toLowerCase().includes(kw.toLowerCase())))return;
+    count++;
     html+=`<tr>`;
     row.forEach(cell=>{
-      const cellStr=esc(cell);
-      const highlighted=keyword?cellStr.replace(new RegExp('('+keyword.replace(/[.*+?^${}()|[\]\\]/g,'\\$&')+')','gi'),'<mark class="search-highlight">$1</mark>'):cellStr;
-      html+=`<td>${highlighted}</td>`;
+      const s=esc(String(cell||''));
+      const v=kw?s.replace(new RegExp('('+kw.replace(/[.*+?^${}()|[\]\\]/g,'\\$&')+')','gi'),'<mark class="hl">$1</mark>'):s;
+      html+=`<td>${v}</td>`;
     });
     html+=`</tr>`;
   });
   html+=`</tbody></table></div>`;
+  if(kw&&count===0)return`<div style="text-align:center;padding:16px;font-size:12px;color:var(--text3)">이 창고에서 결과 없음</div>`;
   return html;
 }
 
@@ -531,24 +604,27 @@ window.searchInv=function(){
   if(!q){res.innerHTML='';return;}
   let found=[];
   WH_NAMES.forEach(wh=>{
-    const inv=DB.inventory&&DB.inventory[wh];
-    if(!inv||!inv.rows)return;
-    const matchRows=inv.rows.filter(r=>r.some(c=>c.toLowerCase().includes(q.toLowerCase())));
+    const inv=INV[wh];
+    if(!inv||!inv.rows||!inv.rows.length)return;
+    const matchRows=inv.rows.filter(r=>r.some(c=>String(c).toLowerCase().includes(q.toLowerCase())));
     if(matchRows.length)found.push({wh,headers:inv.headers,rows:matchRows});
   });
   if(!found.length){res.innerHTML=`<div class="card" style="text-align:center;color:var(--text3);font-size:12px;padding:20px">"${esc(q)}" 검색 결과 없음</div>`;return;}
   const total=found.reduce((a,f)=>a+f.rows.length,0);
   res.innerHTML=`<div style="font-size:11px;color:var(--text2);margin-bottom:8px">총 <b>${total}건</b> 발견</div>`+
-    found.map(f=>`<div class="card" style="margin-bottom:10px;padding:10px">
-      <div class="search-result-wh">${f.wh}</div>
-      <div style="font-size:10px;color:var(--text3);margin-bottom:6px">${f.rows.length}건</div>
+    found.map(f=>`<div class="search-result-card">
+      <div class="search-wh-badge">${f.wh} · ${f.rows.length}건</div>
       ${renderTable(f.headers,f.rows,q)}
     </div>`).join('');
 };
 
-window.addEventListener('online',()=>loadFromFirebase());
+window.addEventListener('online',()=>{loadMain();loadAllWh().then(()=>{if(document.getElementById('panel-inventory').classList.contains('active'))renderInv();});});
 window.addEventListener('offline',setSyncErr);
-loadFromFirebase();
+
+// 시작
+Promise.all([loadMain(),loadAllWh()]).then(()=>{
+  if(document.getElementById('panel-inventory').classList.contains('active'))renderInv();
+});
 </script>
 </body>
 </html>
