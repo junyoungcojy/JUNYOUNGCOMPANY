@@ -52,7 +52,6 @@ textarea{resize:vertical;min-height:80px}
 .loading{text-align:center;padding:40px;color:var(--text3);font-size:13px}
 .offline-bar{background:var(--redbg);color:var(--red);text-align:center;font-size:11px;padding:6px;border-radius:8px;margin-bottom:10px;display:none}
 .offline-bar.show{display:block}
-/* TASKS */
 .task-date-nav{display:flex;align-items:center;gap:10px;margin-bottom:14px}
 .task-date-lbl{flex:1;font-size:16px;font-weight:600;color:var(--text)}
 .task-date-sub{font-size:11px;color:var(--text3);margin-top:1px}
@@ -80,7 +79,6 @@ textarea{resize:vertical;min-height:80px}
 .task-add-row{display:flex;gap:6px;margin-top:10px}
 .task-add-row input{flex:1;margin-bottom:0}
 .task-add-row button{flex-shrink:0;margin-bottom:0}
-/* CALENDAR */
 .cal-layout{display:grid;grid-template-columns:1fr 260px;gap:10px}
 @media(max-width:600px){.cal-layout{grid-template-columns:1fr}}
 .cal-nav{display:flex;align-items:center;justify-content:space-between;margin-bottom:12px}
@@ -105,7 +103,6 @@ textarea{resize:vertical;min-height:80px}
 .ev-date{font-size:10px;color:var(--text2);margin-top:2px}
 .ev-del{background:none;border:none;color:var(--text3);cursor:pointer;font-size:13px}
 .ev-del:hover{color:var(--red)}
-/* OFF */
 .stat-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:8px;margin-bottom:12px}
 .stat-box{background:var(--bg2);border-radius:10px;padding:12px;text-align:center}
 .stat-num{font-size:22px;font-weight:600;color:var(--text)}
@@ -129,17 +126,10 @@ textarea{resize:vertical;min-height:80px}
 .inv-search-wrap{position:relative;margin-bottom:10px}
 .inv-search-wrap input{margin-bottom:0;padding-left:36px}
 .inv-search-icon{position:absolute;left:12px;top:50%;transform:translateY(-50%);font-size:14px;pointer-events:none}
-.inv-wh-group{margin-bottom:6px}
-.inv-wh-group-lbl{font-size:10px;font-weight:600;color:var(--text3);letter-spacing:.5px;margin-bottom:4px;padding-left:2px}
-.inv-wh-tabs{display:flex;gap:5px;flex-wrap:wrap;margin-bottom:10px}
-.inv-wh-tab{padding:5px 12px;border-radius:14px;font-size:11px;font-weight:500;cursor:pointer;border:0.5px solid var(--border);background:var(--bg);color:var(--text2);white-space:nowrap;flex-shrink:0;transition:all .15s}
-.inv-wh-tab.active{color:#fff;border-color:transparent}
-.inv-wh-tab:hover:not(.active){background:var(--bg2)}
-.inv-paste-area{border:1.5px dashed var(--border2);border-radius:var(--radius);padding:16px;background:var(--bg2);margin-bottom:10px}
-.inv-paste-hint{font-size:11px;color:var(--text3);margin-bottom:8px}
-.inv-col-hint{display:grid;grid-template-columns:repeat(4,1fr);gap:4px;margin-bottom:10px}
-.inv-col-box{background:var(--bg);border:0.5px solid var(--border);border-radius:6px;padding:6px;text-align:center;font-size:11px;color:var(--text2)}
-.inv-col-box b{display:block;font-size:13px;color:var(--text);margin-bottom:2px}
+.inv-tabs{display:flex;gap:6px;margin-bottom:12px;flex-wrap:wrap}
+.inv-tab{padding:6px 16px;border-radius:16px;font-size:12px;font-weight:500;cursor:pointer;border:0.5px solid var(--border);background:var(--bg);color:var(--text2);white-space:nowrap;transition:all .15s}
+.inv-tab.active{background:var(--text);color:var(--bg);border-color:var(--text)}
+.inv-tab:hover:not(.active){background:var(--bg2)}
 .inv-table-wrap{overflow-x:auto;border-radius:10px;border:0.5px solid var(--border)}
 .inv-table{width:100%;border-collapse:collapse;font-size:12px}
 .inv-table th{background:var(--bg2);padding:8px 12px;text-align:left;font-weight:600;font-size:11px;color:var(--text2);border-bottom:0.5px solid var(--border);white-space:nowrap}
@@ -150,13 +140,13 @@ textarea{resize:vertical;min-height:80px}
 .inv-meta-lbl{font-size:11px;color:var(--text3)}
 .inv-row-count{font-size:11px;background:var(--bg2);color:var(--text2);padding:2px 8px;border-radius:8px}
 .search-result-card{background:var(--bg);border:0.5px solid var(--border);border-radius:10px;padding:12px;margin-bottom:8px}
-.search-wh-badge{font-size:11px;font-weight:600;padding:3px 10px;border-radius:8px;display:inline-block;margin-bottom:8px;color:#fff}
-.hl{background:rgba(255,200,0,0.35);border-radius:2px;padding:0 1px;color:var(--text)}
-.inv-saving{font-size:12px;color:var(--text3);padding:20px;text-align:center}
-.qty-badge{display:inline-block;padding:1px 8px;border-radius:8px;font-size:11px;font-weight:500}
-.qty-ok{background:var(--greenbg);color:var(--green)}
-.qty-low{background:var(--orangebg);color:var(--orange)}
-.qty-zero{background:var(--redbg);color:var(--red)}
+.search-wh-badge{font-size:11px;font-weight:500;background:var(--bg2);color:var(--text2);padding:3px 10px;border-radius:8px;display:inline-block;margin-bottom:8px}
+.hl{background:rgba(255,200,0,0.35);border-radius:2px;padding:0 1px}
+.qty-ok{color:var(--green);font-weight:500}
+.qty-low{color:var(--orange);font-weight:500}
+.qty-zero{color:var(--red);font-weight:500}
+.inv-reload-btn{padding:5px 12px;border-radius:8px;border:0.5px solid var(--border2);background:var(--bg2);font-size:11px;cursor:pointer;color:var(--text2)}
+.inv-reload-btn:hover{background:var(--text);color:var(--bg)}
 </style>
 </head>
 <body>
@@ -179,7 +169,6 @@ textarea{resize:vertical;min-height:80px}
     <div class="tab" onclick="sw('inventory')">재고 관리</div>
   </div>
 
-  <!-- 당일과제 -->
   <div id="panel-tasks" class="panel active">
     <div class="task-date-nav">
       <button class="task-nav-btn" onclick="chDay(-1)">‹</button>
@@ -193,7 +182,6 @@ textarea{resize:vertical;min-height:80px}
     <div id="task-sections"><div class="loading">불러오는 중...</div></div>
   </div>
 
-  <!-- 할일 캘린더 -->
   <div id="panel-calendar" class="panel">
     <div class="cal-layout">
       <div class="card" style="margin-bottom:0">
@@ -232,7 +220,6 @@ textarea{resize:vertical;min-height:80px}
     </div>
   </div>
 
-  <!-- 휴무 관리 -->
   <div id="panel-off" class="panel">
     <div class="stat-grid" id="off-stats"></div>
     <div class="today-off-card" id="today-off-card"></div>
@@ -252,15 +239,14 @@ textarea{resize:vertical;min-height:80px}
     </div>
   </div>
 
-  <!-- 재고 관리 -->
   <div id="panel-inventory" class="panel">
     <div class="inv-search-wrap">
       <span class="inv-search-icon">🔍</span>
-      <input type="text" id="inv-search" placeholder="전체 창고 검색 — 품번, 색상, 사이즈..." oninput="searchInv()">
+      <input type="text" id="inv-search" placeholder="전체 창고 검색 — 품번, 컬러, 사이즈..." oninput="searchInv()">
     </div>
     <div id="inv-search-results"></div>
-    <div id="inv-wh-tabs"></div>
-    <div id="inv-wh-panel"></div>
+    <div class="inv-tabs" id="inv-tabs"></div>
+    <div id="inv-panel"></div>
   </div>
 </div>
 
@@ -276,38 +262,36 @@ const firebaseConfig = {
   messagingSenderId: "475467571780",
   appId: "1:475467571780:web:ea1399d99f939d26391211"
 };
-
 const fbApp = initializeApp(firebaseConfig);
 const db = getFirestore(fbApp);
+
+// ── Google 시트 설정 ──
+const SHEET_ID = '1SbfcYYbLYh9NlkhDQL6GHqgceYtbojufJ954Q5u1pzM';
+const SHEETS = [
+  { name:'매장재고', label:'매장' },
+  { name:'지2창고',  label:'지하2층' },
+  { name:'지3창고',  label:'지하3층' },
+  { name:'지4창고',  label:'지하4층' },
+  { name:'외부창고', label:'외부창고' },
+];
+function sheetUrl(sheetName){
+  return `https://docs.google.com/spreadsheets/d/${SHEET_ID}/gviz/tq?tqx=out:csv&sheet=${encodeURIComponent(sheetName)}`;
+}
 
 const ROLE_COLORS={점장:'#1565c0',시니어:'#6a1b9a',주니어:'#2e7d32',파트:'#e65100'};
 const EV_COLORS={store:'#c62828',task:'#1565c0',meet:'#7b1fa2',stock:'#2e7d32',clean:'#e65100',etc:'#5d4037'};
 const EV_LABELS={store:'매장',task:'업무',meet:'미팅',stock:'재고',clean:'청소',etc:'기타'};
-const INV_HEADERS=['품번','색상','사이즈','재고'];
-
-// 창고 그룹 정의
-const WH_GROUPS = [
-  { label:'매장', color:'#1565c0', list:['매장1','매장2','매장3'] },
-  { label:'지하2층', color:'#6a1b9a', list:['지하2층1','지하2층2'] },
-  { label:'지하3층', color:'#2e7d32', list:['지하3층1','지하3층2'] },
-  { label:'지하4층', color:'#c62828', list:['지하4층'] },
-  { label:'외부창고', color:'#e65100', list:['외부창고1','외부창고2','외부창고3','외부창고4','외부창고5'] },
-];
-const WH_NAMES = WH_GROUPS.flatMap(g=>g.list);
-const WH_COLOR = {};
-WH_GROUPS.forEach(g=>g.list.forEach(w=>WH_COLOR[w]=g.color));
 
 const todayRaw=new Date();
 const todayStr=fmt(todayRaw);
 let calY=todayRaw.getFullYear(), calM=todayRaw.getMonth();
 let offY=todayRaw.getFullYear(), offM=todayRaw.getMonth();
 let taskDt=new Date(todayRaw);
-let curWh=0;
+let curSheet=0;
 
 let DB={staff:[],off:{},events:[],tasks:{}};
-let INV={};
+let INV={}; // { sheetName: { headers:[], rows:[], loadedAt:'' } }
 let savingMain=false;
-let savingInv={};
 
 function fmt(d){return d.getFullYear()+'-'+p2(d.getMonth()+1)+'-'+p2(d.getDate())}
 function p2(n){return String(n).padStart(2,'0')}
@@ -315,7 +299,6 @@ function dow(s){return['일','월','화','수','목','금','토'][new Date(s+'T0
 function esc(s){return String(s||'').replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;').replace(/"/g,'&quot;')}
 
 const mainRef=doc(db,'store','main');
-function whRef(wh){return doc(db,'store','inv_'+wh.replace(/ /g,'_'));}
 
 async function loadMain(){
   try{
@@ -331,52 +314,62 @@ async function saveMain(){
   catch(e){setSyncErr();saveLocalMain();}
   savingMain=false;
 }
-async function loadWh(wh){
-  try{
-    const snap=await getDoc(whRef(wh));
-    INV[wh]=snap.exists()?snap.data():{rows:[],updatedAt:''};
-  }catch(e){
-    INV[wh]=loadLocalInv(wh)||{rows:[],updatedAt:''};
-  }
-}
-async function saveWh(wh){
-  if(savingInv[wh])return;savingInv[wh]=true;
-  document.getElementById('inv-wh-panel').innerHTML=`<div class="inv-saving">저장 중... (${INV[wh].rows.length}행)</div>`;
-  try{
-    await setDoc(whRef(wh),INV[wh]);
-    saveLocalInv(wh,INV[wh]);setSyncOk();
-  }catch(e){
-    setSyncErr();saveLocalInv(wh,INV[wh]);
-    alert('저장 실패: 데이터가 너무 큽니다. 행 수를 줄여보세요.');
-  }
-  savingInv[wh]=false;renderInv();
-}
-async function loadAllWh(){await Promise.all(WH_NAMES.map(wh=>loadWh(wh)));}
-
 onSnapshot(mainRef,(snap)=>{
   if(snap.exists()&&!savingMain){const d=snap.data();DB={staff:d.staff||DB.staff,off:d.off||{},events:d.events||[],tasks:d.tasks||{}};setSyncOk();renderMain();}
 },()=>setSyncErr());
 
-let whUnsub=null;
-function subscribeWh(wh){
-  if(whUnsub)whUnsub();
-  whUnsub=onSnapshot(whRef(wh),(snap)=>{
-    if(snap.exists()&&!savingInv[wh]){INV[wh]=snap.data();if(document.getElementById('panel-inventory').classList.contains('active'))renderInv();}
-  },()=>{});
-}
-
 function defStaff(){return [{id:'s1',role:'점장',name:'장준영'},{id:'s2',role:'시니어',name:'공석'},{id:'s3',role:'주니어',name:'이아연'}];}
 function saveLocalMain(){try{localStorage.setItem('nf_main',JSON.stringify(DB))}catch(e){}}
 function loadLocalMain(){try{const d=JSON.parse(localStorage.getItem('nf_main')||'null');if(d)DB=d;else DB.staff=defStaff();}catch(e){DB.staff=defStaff();}}
-function saveLocalInv(wh,data){try{localStorage.setItem('nf_inv_'+wh,JSON.stringify(data))}catch(e){}}
-function loadLocalInv(wh){try{return JSON.parse(localStorage.getItem('nf_inv_'+wh)||'null');}catch(e){return null;}}
 function setSyncOk(){document.getElementById('sync-dot').className='sync-dot ok';document.getElementById('sync-lbl').textContent='실시간 연결됨';document.getElementById('offline-bar').classList.remove('show');}
 function setSyncErr(){document.getElementById('sync-dot').className='sync-dot err';document.getElementById('sync-lbl').textContent='오프라인';document.getElementById('offline-bar').classList.add('show');}
-
 function renderMain(){
   renderTasks();
   if(document.getElementById('panel-calendar').classList.contains('active'))renderCal();
   if(document.getElementById('panel-off').classList.contains('active'))renderOff();
+}
+
+// ── Google 시트 로드 ──
+async function loadSheet(sheetName){
+  const panel=document.getElementById('inv-panel');
+  if(panel&&INV[sheetName]===undefined){
+    panel.innerHTML=`<div class="loading">구글 시트에서 불러오는 중...</div>`;
+  }
+  try{
+    const res=await fetch(sheetUrl(sheetName));
+    const csv=await res.text();
+    const rows=parseCSV(csv);
+    if(rows.length<1){INV[sheetName]={headers:[],rows:[],loadedAt:nowStr()};return;}
+    const headers=rows[0];
+    const data=rows.slice(1).filter(r=>r.some(c=>c));
+    INV[sheetName]={headers,rows:data,loadedAt:nowStr()};
+  }catch(e){
+    INV[sheetName]={headers:[],rows:[],loadedAt:'',error:true};
+  }
+}
+
+function parseCSV(csv){
+  const lines=csv.trim().split('\n');
+  return lines.map(line=>{
+    const cells=[];let cur='';let inQ=false;
+    for(let i=0;i<line.length;i++){
+      const c=line[i];
+      if(c==='"'){if(inQ&&line[i+1]==='"'){cur+='"';i++;}else inQ=!inQ;}
+      else if(c===','&&!inQ){cells.push(cur.trim());cur='';}
+      else cur+=c;
+    }
+    cells.push(cur.trim());
+    return cells;
+  });
+}
+
+function nowStr(){
+  const n=new Date();
+  return n.getFullYear()+'.'+(n.getMonth()+1)+'.'+n.getDate()+' '+p2(n.getHours())+':'+p2(n.getMinutes());
+}
+
+async function loadAllSheets(){
+  await Promise.all(SHEETS.map(s=>loadSheet(s.name)));
 }
 
 window.sw=function(id){
@@ -385,7 +378,7 @@ window.sw=function(id){
   document.getElementById('panel-'+id).classList.add('active');
   if(id==='calendar')renderCal();
   if(id==='off')renderOff();
-  if(id==='inventory'){renderInv();subscribeWh(WH_NAMES[curWh]);}
+  if(id==='inventory')renderInv();
 };
 
 /* ── TASKS ── */
@@ -495,117 +488,72 @@ window.removeStaff=function(id){if(!confirm('직원을 삭제하시겠습니까?
 
 /* ── INVENTORY ── */
 function renderInv(){
-  // 그룹별 탭 렌더
-  let tabHtml='';
-  let idx=0;
-  WH_GROUPS.forEach(g=>{
-    tabHtml+=`<div style="margin-bottom:8px"><div class="inv-wh-group-lbl" style="color:${g.color}">${g.label}</div><div class="inv-wh-tabs">`;
-    g.list.forEach(wh=>{
-      const i=WH_NAMES.indexOf(wh);
-      const cnt=(INV[wh]&&INV[wh].rows)?INV[wh].rows.length:0;
-      tabHtml+=`<div class="inv-wh-tab ${i===curWh?'active':''}" style="${i===curWh?'background:'+g.color+';border-color:'+g.color:'color:'+g.color+';border-color:'+g.color+'44'}" onclick="switchWh(${i})">${wh}${cnt?` <span style="font-size:9px;opacity:.8">${cnt}</span>`:''}</div>`;
-    });
-    tabHtml+='</div></div>';
-  });
-  document.getElementById('inv-wh-tabs').innerHTML=tabHtml;
-  renderWhPanel();
+  document.getElementById('inv-tabs').innerHTML=SHEETS.map((s,i)=>`<div class="inv-tab ${i===curSheet?'active':''}" onclick="switchSheet(${i})">${s.label}</div>`).join('');
+  renderSheetPanel();
 }
 
-window.switchWh=function(i){
-  curWh=i;renderInv();
+window.switchSheet=function(i){
+  curSheet=i;
   document.getElementById('inv-search').value='';
   document.getElementById('inv-search-results').innerHTML='';
-  subscribeWh(WH_NAMES[i]);
-};
-
-function renderWhPanel(){
-  const wh=WH_NAMES[curWh];
-  const inv=INV[wh]||{rows:[],updatedAt:''};
-  const hasData=inv.rows&&inv.rows.length>0;
-  const col=WH_COLOR[wh]||'var(--blue)';
-  let html='';
-  if(hasData){
-    html+=`<div class="inv-meta">
-      <span class="inv-meta-lbl" style="color:${col};font-weight:500">${wh}</span>
-      <span style="display:flex;gap:8px;align-items:center">
-        <span class="inv-meta-lbl">업데이트: ${inv.updatedAt||'-'}</span>
-        <span class="inv-row-count">${inv.rows.length}행</span>
-      </span>
-    </div>`;
-    html+=renderTable(inv.rows,'');
-    html+=`<div style="margin-top:10px;display:flex;gap:6px;flex-wrap:wrap">
-      <button class="btn btn-sm" onclick="showPasteBox()">📋 데이터 업데이트</button>
-      <button class="btn btn-sm btn-danger" onclick="clearWh('${wh}')">초기화</button>
-    </div>
-    <div id="paste-box" style="display:none;margin-top:10px">
-      ${pasteAreaHtml()}
-    </div>`;
-  } else {
-    html+=`<div style="font-size:13px;font-weight:500;color:${col};margin-bottom:10px">${wh} — 재고 없음</div>`;
-    html+=pasteAreaHtml();
+  renderInv();
+  const sn=SHEETS[i].name;
+  if(!INV[sn]){
+    loadSheet(sn).then(()=>renderSheetPanel());
   }
-  document.getElementById('inv-wh-panel').innerHTML=html;
-}
-
-function pasteAreaHtml(){
-  return`<div class="inv-paste-area">
-    <div class="inv-paste-hint">엑셀에서 복사(Ctrl+C) 후 붙여넣기(Ctrl+V) — 첫 행은 헤더(품번/색상/사이즈/재고)</div>
-    <div class="inv-col-hint">
-      <div class="inv-col-box"><b>A열</b>품번</div>
-      <div class="inv-col-box"><b>B열</b>색상</div>
-      <div class="inv-col-box"><b>C열</b>사이즈</div>
-      <div class="inv-col-box"><b>D열</b>재고</div>
-    </div>
-    <textarea id="paste-ta" placeholder="여기에 붙여넣기..."></textarea>
-    <div style="display:flex;gap:6px">
-      <button class="btn btn-dark" onclick="processPaste()">저장하기</button>
-      <button class="btn" onclick="hidePaste()">취소</button>
-    </div>
-  </div>`;
-}
-
-window.showPasteBox=function(){const b=document.getElementById('paste-box');if(b)b.style.display=b.style.display==='none'?'block':'none';};
-window.hidePaste=function(){const b=document.getElementById('paste-box');if(b)b.style.display='none';};
-
-window.processPaste=function(){
-  const ta=document.getElementById('paste-ta');if(!ta)return;
-  const raw=ta.value.trim();if(!raw){alert('붙여넣기 할 데이터가 없습니다.');return;}
-  const lines=raw.split('\n').map(l=>l.split('\t').map(c=>c.trim().replace(/\r/g,'')));
-  if(lines.length<1){alert('데이터가 없습니다.');return;}
-  // 첫 행이 헤더인지 확인 (숫자가 없으면 헤더로 판단)
-  const firstIsHeader=lines[0].some(c=>isNaN(c)||c==='');
-  const dataLines=firstIsHeader?lines.slice(1):lines;
-  const wh=WH_NAMES[curWh];
-  const now=new Date();
-  INV[wh]={
-    rows:dataLines.filter(r=>r.some(c=>c)).map(r=>[r[0]||'',r[1]||'',r[2]||'',r[3]||'']),
-    updatedAt:now.getFullYear()+'.'+(now.getMonth()+1)+'.'+now.getDate()+' '+p2(now.getHours())+':'+p2(now.getMinutes())
-  };
-  saveWh(wh);
 };
 
-window.clearWh=function(wh){
-  if(!confirm(wh+' 재고를 초기화하시겠습니까?'))return;
-  INV[wh]={rows:[],updatedAt:''};saveWh(wh);
+function renderSheetPanel(){
+  const sh=SHEETS[curSheet];
+  const inv=INV[sh.name];
+  const panel=document.getElementById('inv-panel');
+  if(!inv){
+    panel.innerHTML=`<div class="loading">불러오는 중...</div>`;
+    loadSheet(sh.name).then(()=>renderSheetPanel());
+    return;
+  }
+  if(inv.error){
+    panel.innerHTML=`<div class="card" style="text-align:center;color:var(--red);padding:20px">구글 시트 로드 실패<br><small style="color:var(--text3)">공개 설정을 확인해주세요</small><br><br><button class="inv-reload-btn" onclick="reloadSheet()">다시 시도</button></div>`;
+    return;
+  }
+  if(!inv.rows||!inv.rows.length){
+    panel.innerHTML=`<div class="card" style="text-align:center;color:var(--text3);padding:20px">${sh.label} — 데이터 없음<br><button class="inv-reload-btn" style="margin-top:10px" onclick="reloadSheet()">새로고침</button></div>`;
+    return;
+  }
+  panel.innerHTML=`
+    <div class="inv-meta">
+      <span class="inv-meta-lbl">구글 시트 · ${inv.loadedAt}</span>
+      <div style="display:flex;align-items:center;gap:8px">
+        <span class="inv-row-count">${inv.rows.length}행</span>
+        <button class="inv-reload-btn" onclick="reloadSheet()">새로고침</button>
+      </div>
+    </div>
+    ${renderTable(inv.headers,inv.rows,'')}`;
+}
+
+window.reloadSheet=function(){
+  const sn=SHEETS[curSheet].name;
+  delete INV[sn];
+  renderSheetPanel();
 };
 
 function qtyClass(v){const n=parseInt(v)||0;return n===0?'qty-zero':n<=3?'qty-low':'qty-ok';}
 
-function renderTable(rows,kw){
-  if(!rows||!rows.length)return '<div style="font-size:11px;color:var(--text3);padding:12px">데이터 없음</div>';
+function renderTable(headers,rows,kw){
+  if(!headers||!headers.length)return '';
   let html=`<div class="inv-table-wrap"><table class="inv-table"><thead><tr>`;
-  INV_HEADERS.forEach(h=>{html+=`<th>${h}</th>`;});
+  headers.forEach(h=>{html+=`<th>${esc(h)}</th>`;});
   html+=`</tr></thead><tbody>`;
   let cnt=0;
-  rows.forEach(row=>{
+  rows.forEach((row,ri)=>{
     if(kw&&!row.some(c=>String(c).toLowerCase().includes(kw.toLowerCase())))return;
-    cnt++;
-    html+=`<tr>`;
+    cnt++;html+=`<tr>`;
     row.forEach((cell,ci)=>{
       const s=esc(String(cell||''));
       const v=kw?s.replace(new RegExp('('+kw.replace(/[.*+?^${}()|[\]\\]/g,'\\$&')+')','gi'),'<mark class="hl">$1</mark>'):s;
-      if(ci===3){
-        html+=`<td><span class="qty-badge ${qtyClass(cell)}">${v}</span></td>`;
+      // 마지막 컬럼(재고)에 색상 적용
+      if(ci===headers.length-1&&!isNaN(parseInt(cell))){
+        html+=`<td class="${qtyClass(cell)}">${v}</td>`;
       } else {
         html+=`<td>${v}</td>`;
       }
@@ -622,29 +570,32 @@ window.searchInv=function(){
   const res=document.getElementById('inv-search-results');
   if(!q){res.innerHTML='';return;}
   let found=[];
-  WH_NAMES.forEach(wh=>{
-    const inv=INV[wh];
+  SHEETS.forEach(sh=>{
+    const inv=INV[sh.name];
     if(!inv||!inv.rows||!inv.rows.length)return;
     const matchRows=inv.rows.filter(r=>r.some(c=>String(c).toLowerCase().includes(q.toLowerCase())));
-    if(matchRows.length)found.push({wh,rows:matchRows});
+    if(matchRows.length)found.push({label:sh.label,headers:inv.headers,rows:matchRows});
   });
   if(!found.length){
     res.innerHTML=`<div class="card" style="text-align:center;color:var(--text3);font-size:12px;padding:20px">"${esc(q)}" — 전체 창고에서 결과 없음</div>`;
     return;
   }
   const total=found.reduce((a,f)=>a+f.rows.length,0);
-  res.innerHTML=`<div style="font-size:11px;color:var(--text2);margin-bottom:8px">전체 <b>${total}건</b> 발견</div>`+
+  res.innerHTML=`<div style="font-size:11px;color:var(--text2);margin-bottom:8px">총 <b>${total}건</b> 발견</div>`+
     found.map(f=>`<div class="search-result-card">
-      <div class="search-wh-badge" style="background:${WH_COLOR[f.wh]||'#888'}">${f.wh} · ${f.rows.length}건</div>
-      ${renderTable(f.rows,q)}
+      <div class="search-wh-badge">${f.label} · ${f.rows.length}건</div>
+      ${renderTable(f.headers,f.rows,q)}
     </div>`).join('');
 };
 
-window.addEventListener('online',()=>{loadMain();loadAllWh().then(()=>{if(document.getElementById('panel-inventory').classList.contains('active'))renderInv();});});
+window.addEventListener('online',()=>{loadMain();});
 window.addEventListener('offline',setSyncErr);
 
-Promise.all([loadMain(),loadAllWh()]).then(()=>{
-  if(document.getElementById('panel-inventory').classList.contains('active'))renderInv();
+// 시작
+loadMain();
+// 재고 탭 들어갈 때 로드
+document.querySelector('.tab:last-child').addEventListener('click',()=>{
+  if(Object.keys(INV).length===0)loadAllSheets().then(()=>renderSheetPanel());
 });
 </script>
 </body>
