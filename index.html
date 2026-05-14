@@ -453,14 +453,31 @@ function renderTasks(){
 
   // 미체크 이동입고/출고/픽업 수집
   const uncheckedItems=[];
-  const prevDs=fmt(new Date(new Date(todayStr+'T00:00:00').getTime()-86400000));
+  // 이동입고: 모든 미완료 / 이동출고+픽업: 3일치 미완료
   ['mv_in','mv_out','mv_pickup'].forEach(mvKey=>{
     const mvData=DB[mvKey]||{};
     const label=mvKey==='mv_in'?'이동입고':mvKey==='mv_out'?'이동출고':'제품픽업';
     const color=mvKey==='mv_in'?'bdg-in':mvKey==='mv_out'?'bdg-out':'bdg-pickup';
-    // 오늘 날짜 기준으로 미체크 항목
-    [todayStr,prevDs].forEach(checkDs=>{
-      const items=(mvData[checkDs]||[]).filter(i=>!i.checked);
+    const checkDates=[];
+    checkDates.push(todayStr);
+    if(mvKey==='mv_in'){
+      // 이동입고: 모든 과거 날짜
+      Object.keys(mvData).sort().forEach(d=>{if(d<todayStr)checkDates.push(d);});
+    } else {
+      // 이동출고/픽업: 최근 3일
+      for(let d=1;d<=3;d++){
+        checkDates.push(fmt(new Date(new Date(todayStr+'T00:00:00').getTime()-d*86400000)));
+      }
+    }
+    checkDates.forEach(checkDs=>{
+      const items=(mvData[checkDs]||[]).filter(i=>{
+        if(mvKey==='mv_out'){
+          const noJ=['자동','권고'].includes(i.type||'');
+          return !(i.chkDong&&(i.chkJeonsan||noJ));
+        }
+        if(mvKey==='mv_in') return !(i.checked||(i.store&&i.duedate&&i.indate));
+        return !i.checked;
+      });
       items.forEach(i=>{
         const isCarry=checkDs!==todayStr;
         uncheckedItems.push({label,color,text:i.pno+(i.size?' ('+i.size+')':'')+(i.qty?' x'+i.qty:''),type:i.type||'',isCarry,ds:checkDs});
@@ -494,12 +511,19 @@ function renderTasks(){
     ['mv_in','mv_out','mv_pickup'].forEach(mvKey=>{
       const mvData=DB[mvKey]||{};
       const label=mvKey==='mv_in'?'이동입고':mvKey==='mv_out'?'이동출고':'제품픽업';
-      [todayStr,prevDs].forEach(checkDs=>{
-        const mvItems=(mvData[checkDs]||[]).filter(it=>!it.checked);
+      const cdates=[todayStr];
+      if(mvKey==='mv_in'){Object.keys(mvData).sort().forEach(d=>{if(d<todayStr)cdates.push(d);});}
+      else{for(let k=1;k<=3;k++)cdates.push(fmt(new Date(new Date(todayStr+'T00:00:00').getTime()-k*86400000)));}
+      cdates.forEach(checkDs=>{
+        const mvItems=(mvData[checkDs]||[]).filter(it=>{
+          if(mvKey==='mv_out'){const noJ=['자동','권고'].includes(it.type||'');return !(it.chkDong&&(it.chkJeonsan||noJ));}
+          if(mvKey==='mv_in') return !(it.checked||(it.store&&it.duedate&&it.indate));
+          return !it.checked;
+        });
         mvItems.forEach(it=>{
           const isCarry=checkDs!==todayStr;
-          const txt=`[${label}] ${it.pno}${it.size?' ('+it.size+')':''}${it.qty?' x'+it.qty:''}${it.type?' / '+it.type:''}${isCarry?' ← 전날미완료':''}`;
-          storeItems.push({id:'__mv__'+it.id,text:txt,done:false,doneAt:null,_isMv:true});
+          const txt=`[${label}] ${it.pno}${it.size?' ('+it.size+')':''}${it.qty?' x'+it.qty:''}${it.type?' / '+it.type:''}${isCarry?' ← '+checkDs+' 미완료':''}`;
+          storeItems.push({id:'__mv__'+it.id+'_'+checkDs,text:txt,done:false,doneAt:null,_isMv:true});
         });
       });
     });
@@ -545,19 +569,31 @@ function renderIn(){
   updateDateNav('in');
   renderFilterRow('in',IN_TYPES);
   const ds=fmt(dates.in);
-  const prevDs=fmt(new Date(new Date(ds+'T00:00:00').getTime()-86400000));
-  const items=getMvItems('mv_in',ds);
-  const prevItems=getMvItems('mv_in',prevDs).filter(i=>!(i.checked||(i.store&&i.duedate&&i.indate)));
   const f=filters.in;
+  // 오늘 항목
+  const items=getMvItems('mv_in',ds);
   const filtered=items.filter(i=>f==='전체'||i.type===f);
-  const prevFiltered=prevItems.filter(i=>f==='전체'||i.type===f);
+  // 과거 모든 날짜에서 미완료 항목 수집 (날짜 제한 없음)
+  const allPrevIncomplete=[];
+  Object.keys(DB.mv_in||{}).sort().forEach(pastDs=>{
+    if(pastDs>=ds)return; // 오늘 이후 제외
+    const pastItems=(DB.mv_in[pastDs]||[]).filter(i=>!(i.checked||(i.store&&i.duedate&&i.indate)));
+    const pastFiltered=pastItems.filter(i=>f==='전체'||i.type===f);
+    if(pastFiltered.length){
+      allPrevIncomplete.push({ds:pastDs,items:pastFiltered});
+    }
+  });
   let html='';
-  if(prevFiltered.length){
-    html+=`<div style="font-size:11px;font-weight:600;color:var(--orange);margin-bottom:6px">전날 미완료</div>`;
-    prevFiltered.forEach(i=>{html+=mvInRow(i,prevDs,true);});
+  if(allPrevIncomplete.length){
+    html+=`<div style="font-size:11px;font-weight:600;color:var(--orange);margin-bottom:8px">📌 미완료 이동입고</div>`;
+    allPrevIncomplete.forEach(({ds:pastDs,items:pastItems})=>{
+      html+=`<div style="font-size:10px;color:var(--text3);margin:6px 0 3px;font-weight:500">${pastDs} (${dow(pastDs)})</div>`;
+      pastItems.forEach(i=>{html+=mvInRow(i,pastDs,true);});
+    });
+    if(filtered.length)html+=`<div style="height:1px;background:var(--border);margin:10px 0"></div>`;
   }
   if(filtered.length){filtered.forEach(i=>{html+=mvInRow(i,ds,false);});}
-  if(!filtered.length&&!prevFiltered.length)html='<div class="mv-section-empty">등록된 이동입고 없음</div>';
+  if(!filtered.length&&!allPrevIncomplete.length)html='<div class="mv-section-empty">등록된 이동입고 없음</div>';
   document.getElementById('in-list').innerHTML=html;
 }
 function mvInRow(i,ds,carry){
@@ -698,22 +734,30 @@ function renderOut(){
   updateDateNav('out');
   renderFilterRow('out',OUT_TYPES);
   const ds=fmt(dates.out);
-  const prevDs=fmt(new Date(new Date(ds+'T00:00:00').getTime()-86400000));
-  const items=getMvItems('mv_out',ds);
-  const prevItems=getMvItems('mv_out',prevDs).filter(i=>{
-    const noJ=['자동','권고'].includes(i.type||'');
-    return !(i.chkDong&&(i.chkJeonsan||noJ));
-  });
   const f=filters.out;
+  const items=getMvItems('mv_out',ds);
   const filtered=items.filter(i=>f==='전체'||i.type===f);
-  const prevFiltered=prevItems.filter(i=>f==='전체'||i.type===f);
+  // 3일치 미완료 수집
+  const prev3Incomplete=[];
+  for(let d=1;d<=3;d++){
+    const pastDs=fmt(new Date(new Date(ds+'T00:00:00').getTime()-d*86400000));
+    const pastItems=(DB.mv_out[pastDs]||[]).filter(i=>{
+      const noJ=['자동','권고'].includes(i.type||'');
+      return !(i.chkDong&&(i.chkJeonsan||noJ));
+    }).filter(i=>f==='전체'||i.type===f);
+    if(pastItems.length)prev3Incomplete.push({ds:pastDs,items:pastItems});
+  }
   let html='';
-  if(prevFiltered.length){
-    html+=`<div style="font-size:11px;font-weight:600;color:var(--orange);margin-bottom:6px">전날 미완료</div>`;
-    prevFiltered.forEach(i=>{html+=mvOutRow(i,prevDs,true);});
+  if(prev3Incomplete.length){
+    html+=`<div style="font-size:11px;font-weight:600;color:var(--orange);margin-bottom:8px">📌 미완료 이동출고 (최근 3일)</div>`;
+    prev3Incomplete.forEach(({ds:pastDs,items:pastItems})=>{
+      html+=`<div style="font-size:10px;color:var(--text3);margin:6px 0 3px;font-weight:500">${pastDs} (${dow(pastDs)})</div>`;
+      pastItems.forEach(i=>{html+=mvOutRow(i,pastDs,true);});
+    });
+    if(filtered.length)html+=`<div style="height:1px;background:var(--border);margin:10px 0"></div>`;
   }
   if(filtered.length){filtered.forEach(i=>{html+=mvOutRow(i,ds,false);});}
-  if(!filtered.length&&!prevFiltered.length)html='<div class="mv-section-empty">등록된 이동출고 없음</div>';
+  if(!filtered.length&&!prev3Incomplete.length)html='<div class="mv-section-empty">등록된 이동출고 없음</div>';
   document.getElementById('out-list').innerHTML=html;
 }
 function mvOutRow(i,ds,carry){
@@ -764,19 +808,27 @@ function renderPickup(){
   updateDateNav('pickup');
   renderFilterRow('pickup',PICKUP_TYPES);
   const ds=fmt(dates.pickup);
-  const prevDs=fmt(new Date(new Date(ds+'T00:00:00').getTime()-86400000));
-  const items=getMvItems('mv_pickup',ds);
-  const prevItems=getMvItems('mv_pickup',prevDs).filter(i=>!i.checked);
   const f=filters.pickup;
+  const items=getMvItems('mv_pickup',ds);
   const filtered=items.filter(i=>f==='전체'||i.type===f);
-  const prevFiltered=prevItems.filter(i=>f==='전체'||i.type===f);
+  // 3일치 미완료 수집
+  const prev3Pickup=[];
+  for(let d=1;d<=3;d++){
+    const pastDs=fmt(new Date(new Date(ds+'T00:00:00').getTime()-d*86400000));
+    const pastItems=(DB.mv_pickup[pastDs]||[]).filter(i=>!i.checked).filter(i=>f==='전체'||i.type===f);
+    if(pastItems.length)prev3Pickup.push({ds:pastDs,items:pastItems});
+  }
   let html='';
-  if(prevFiltered.length){
-    html+=`<div style="font-size:11px;font-weight:600;color:var(--orange);margin-bottom:6px">전날 미완료</div>`;
-    prevFiltered.forEach(i=>{html+=mvPickupRow(i,prevDs,true);});
+  if(prev3Pickup.length){
+    html+=`<div style="font-size:11px;font-weight:600;color:var(--orange);margin-bottom:8px">📌 미완료 제품픽업 (최근 3일)</div>`;
+    prev3Pickup.forEach(({ds:pastDs,items:pastItems})=>{
+      html+=`<div style="font-size:10px;color:var(--text3);margin:6px 0 3px;font-weight:500">${pastDs} (${dow(pastDs)})</div>`;
+      pastItems.forEach(i=>{html+=mvPickupRow(i,pastDs,true);});
+    });
+    if(filtered.length)html+=`<div style="height:1px;background:var(--border);margin:10px 0"></div>`;
   }
   if(filtered.length){filtered.forEach(i=>{html+=mvPickupRow(i,ds,false);});}
-  if(!filtered.length&&!prevFiltered.length)html='<div class="mv-section-empty">등록된 제품픽업 없음</div>';
+  if(!filtered.length&&!prev3Pickup.length)html='<div class="mv-section-empty">등록된 제품픽업 없음</div>';
   document.getElementById('pickup-list').innerHTML=html;
 }
 function mvPickupRow(i,ds,carry){
