@@ -241,8 +241,7 @@ input:focus,select:focus{border-color:var(--text)}
         <input type="number" id="in-qty" placeholder="개수" min="1">
         <select id="in-type"><option value="">종류 선택</option><option>주문</option><option>물</option><option>단체</option><option>권고</option><option>자동</option></select>
       </div>
-      <div class="mv-grid mv-grid-2" style="margin-bottom:8px">
-        <input type="text" id="in-store" placeholder="입고매장" style="margin:0">
+      <div style="margin-bottom:8px">
         <input type="text" id="in-note" placeholder="메모(선택)" style="margin:0">
       </div>
       <button class="btn btn-dark" onclick="addMv('in')">등록</button>
@@ -548,7 +547,7 @@ function renderIn(){
   const ds=fmt(dates.in);
   const prevDs=fmt(new Date(new Date(ds+'T00:00:00').getTime()-86400000));
   const items=getMvItems('mv_in',ds);
-  const prevItems=getMvItems('mv_in',prevDs).filter(i=>!(i.checked||(i.duedate&&i.indate)));
+  const prevItems=getMvItems('mv_in',prevDs).filter(i=>!(i.checked||(i.store&&i.duedate&&i.indate)));
   const f=filters.in;
   const filtered=items.filter(i=>f==='전체'||i.type===f);
   const prevFiltered=prevItems.filter(i=>f==='전체'||i.type===f);
@@ -563,7 +562,7 @@ function renderIn(){
 }
 function mvInRow(i,ds,carry){
   // 구한날+입고예정일 둘다 있으면 완료(checked)
-  const bothDates=i.duedate&&i.indate;
+  const bothDates=i.store&&i.duedate&&i.indate;
   const isCompleted=i.checked||bothDates;
   return`<div class="mv-row ${carry?'carry':''}" style="${isCompleted?'opacity:.5':''}">
     <div class="mv-chk ${isCompleted?'done':''}" onclick="checkMv('mv_in','${ds}','${i.id}')"></div>
@@ -575,6 +574,8 @@ function mvInRow(i,ds,carry){
         ${i.type?`<span class="type-chip type-${i.type}">${esc(i.type)}</span>`:''}
         ${i.store?`<span class="mv-chip">${esc(i.store)}</span>`:''}
         ${i.note?`<span class="mv-chip">${esc(i.note)}</span>`:''}
+        ${i.store?`<span class="mv-chip">→${esc(i.store)}</span>`:''}
+        ${i.note2?`<span class="mv-chip">${esc(i.note2)}</span>`:''}
         ${isCompleted?'<span class="mv-done-time">✓ 완료</span>':''}
         ${carry?'<span class="mv-carry-lbl">전날 미완료</span>':''}
       </div>
@@ -583,16 +584,29 @@ function mvInRow(i,ds,carry){
         ${i.indate?`<span class="bdg bdg-time">입고예정일: ${i.indate}</span>`:''}
         ${i.checkedAt?`<span class="mv-done-time">완료 ${i.checkedAt}</span>`:''}
       </div>
-      ${!isCompleted?`<div class="in-date-update" style="display:flex;gap:5px;margin-top:7px;flex-wrap:wrap;align-items:center">
-        <div style="font-size:10px;color:var(--text3);width:100%;margin-bottom:2px">📅 날짜 입력하면 완료처리:</div>
-        <div style="flex:1;min-width:120px">
-          <div style="font-size:9px;color:var(--text3);margin-bottom:2px">구한날</div>
-          <input type="date" id="in-due-${i.id}" style="font-size:11px;padding:4px 7px;margin:0" onchange="updateInDate('${ds}','${i.id}')">
+      ${!isCompleted?`<div class="in-date-update" style="margin-top:8px;padding-top:8px;border-top:0.5px solid var(--border)">
+        <div style="font-size:10px;color:var(--text3);margin-bottom:6px">✏️ 아래 입력 후 완료처리:</div>
+        <div style="display:grid;grid-template-columns:1fr 1fr;gap:5px;margin-bottom:5px">
+          <div>
+            <div style="font-size:9px;color:var(--text3);margin-bottom:2px">입고매장</div>
+            <input type="text" id="in-st-${i.id}" value="${esc(i.store||'')}" placeholder="입고매장" style="font-size:11px;padding:4px 7px;margin:0">
+          </div>
+          <div>
+            <div style="font-size:9px;color:var(--text3);margin-bottom:2px">추가메모</div>
+            <input type="text" id="in-nt2-${i.id}" value="${esc(i.note2||'')}" placeholder="추가메모(선택)" style="font-size:11px;padding:4px 7px;margin:0">
+          </div>
         </div>
-        <div style="flex:1;min-width:120px">
-          <div style="font-size:9px;color:var(--text3);margin-bottom:2px">입고예정일</div>
-          <input type="date" id="in-ind-${i.id}" style="font-size:11px;padding:4px 7px;margin:0" onchange="updateInDate('${ds}','${i.id}')">
+        <div style="display:grid;grid-template-columns:1fr 1fr;gap:5px;margin-bottom:6px">
+          <div>
+            <div style="font-size:9px;color:var(--text3);margin-bottom:2px">구한날</div>
+            <input type="date" id="in-due-${i.id}" value="${i.duedate||''}" style="font-size:11px;padding:4px 7px;margin:0">
+          </div>
+          <div>
+            <div style="font-size:9px;color:var(--text3);margin-bottom:2px">입고예정일</div>
+            <input type="date" id="in-ind-${i.id}" value="${i.indate||''}" style="font-size:11px;padding:4px 7px;margin:0">
+          </div>
         </div>
+        <button class="btn btn-sm btn-dark" onclick="updateInDate('${ds}','${i.id}')">저장</button>
       </div>`:''}
     </div>
     <button class="mv-del" onclick="delMv('mv_in','${ds}','${i.id}')">✕</button>
@@ -607,11 +621,12 @@ window.addMv=function(type){
     item.size=document.getElementById('in-size').value.trim()||'';
     item.qty=document.getElementById('in-qty').value||'';
     item.type=document.getElementById('in-type').value||'';
-    item.store=document.getElementById('in-store').value.trim()||'';
+    item.store='';
     item.note=document.getElementById('in-note').value.trim()||'';
+    item.note2='';
     item.duedate='';
     item.indate='';
-    ['in-size','in-qty','in-store','in-note'].forEach(id=>{document.getElementById(id).value='';});
+    ['in-size','in-qty','in-note'].forEach(id=>{document.getElementById(id).value='';});
     document.getElementById('in-type').selectedIndex=0;
   } else if(type==='out'){
     item.size=document.getElementById('out-size').value.trim()||'';
@@ -643,15 +658,18 @@ window.checkMv=function(key,ds,id){
   const type=key.replace('mv_','');renderMv(type);renderTasks();
 };
 window.updateInDate=function(ds,id){
-  const dueEl=document.getElementById('in-due-'+id);
-  const indEl=document.getElementById('in-ind-'+id);
-  if(!dueEl||!indEl)return;
   const items=getMvItems('mv_in',ds);
   const i=items.find(x=>x.id===id);if(!i)return;
-  if(dueEl.value)i.duedate=dueEl.value;
-  if(indEl.value)i.indate=indEl.value;
-  // 둘 다 입력됐으면 완료
-  if(i.duedate&&i.indate){
+  const stEl=document.getElementById('in-st-'+id);
+  const nt2El=document.getElementById('in-nt2-'+id);
+  const dueEl=document.getElementById('in-due-'+id);
+  const indEl=document.getElementById('in-ind-'+id);
+  if(stEl&&stEl.value.trim())i.store=stEl.value.trim();
+  if(nt2El)i.note2=nt2El.value.trim();
+  if(dueEl&&dueEl.value)i.duedate=dueEl.value;
+  if(indEl&&indEl.value)i.indate=indEl.value;
+  // 입고매장 + 구한날 + 입고예정일 모두 있으면 완료
+  if(i.store&&i.duedate&&i.indate){
     i.checked=true;
     const n=new Date();i.checkedAt=p2(n.getHours())+':'+p2(n.getMinutes());
   }
