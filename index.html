@@ -227,16 +227,24 @@ input:focus,select:focus{border-color:var(--text)}
     <div class="mv-filter-row" id="in-filter-row"></div>
     <div class="mv-add-form">
       <div class="mv-add-form-title">+ 이동입고 등록</div>
-      <div class="mv-grid mv-grid-3" style="margin-bottom:6px">
+      <div class="mv-grid mv-grid-4" style="margin-bottom:6px">
         <input type="text" id="in-pno" placeholder="품번">
+        <input type="text" id="in-size" placeholder="사이즈">
         <input type="number" id="in-qty" placeholder="개수" min="1">
-        <select id="in-type"><option value="">종류 선택</option><option>주문</option><option>물</option></select>
+        <select id="in-type"><option value="">종류 선택</option><option>주문</option><option>물</option><option>단체</option><option>권고</option><option>자동</option></select>
       </div>
-      <div class="mv-grid mv-grid-3" style="margin-bottom:8px">
-        <input type="text" id="in-store" placeholder="입고매장">
-        <input type="date" id="in-duedate" placeholder="구한날짜">
-        <input type="date" id="in-indate" placeholder="입고날짜">
+      <div style="display:grid;grid-template-columns:1fr 1fr 1fr;gap:6px;margin-bottom:2px">
+        <input type="text" id="in-store" placeholder="입고매장" style="margin:0">
+        <div>
+          <div style="font-size:10px;color:var(--text3);margin-bottom:3px;padding-left:2px">구한날</div>
+          <input type="date" id="in-duedate" style="margin:0">
+        </div>
+        <div>
+          <div style="font-size:10px;color:var(--text3);margin-bottom:3px;padding-left:2px">입고예정일</div>
+          <input type="date" id="in-indate" style="margin:0">
+        </div>
       </div>
+      <div style="margin-bottom:8px"></div>
       <button class="btn btn-dark" onclick="addMv('in')">등록</button>
     </div>
     <div id="in-list"></div>
@@ -255,13 +263,17 @@ input:focus,select:focus{border-color:var(--text)}
       <div class="mv-add-form-title">+ 이동출고 등록</div>
       <div class="mv-grid mv-grid-4" style="margin-bottom:6px">
         <input type="text" id="out-pno" placeholder="품번">
+        <input type="text" id="out-size" placeholder="사이즈">
         <input type="number" id="out-qty" placeholder="개수" min="1">
         <select id="out-type"><option value="">종류 선택</option><option>자동</option><option>권고</option><option>요청</option><option>교환</option></select>
-        <input type="text" id="out-dong" placeholder="동진등록">
+      </div>
+      <div class="mv-grid mv-grid-2" style="margin-bottom:6px">
+        <input type="text" id="out-dong" placeholder="출고매장" style="margin:0">
+        <input type="text" id="out-waybill2" placeholder="운송장번호(동진및택배)" style="margin:0">
       </div>
       <div class="mv-grid mv-grid-2" style="margin-bottom:8px">
-        <input type="text" id="out-waybill" placeholder="운송장번호(동진및택배)">
-        <select id="out-send"><option value="">동진or택배</option><option>동진</option><option>택배</option></select>
+        <input type="text" id="out-waybill" placeholder="운송장번호(동진및택배)" style="margin:0">
+        <select id="out-send" style="margin:0"><option value="">동진or택배</option><option>동진</option><option>택배</option></select>
       </div>
       <button class="btn btn-dark" onclick="addMv('out')">등록</button>
     </div>
@@ -367,7 +379,7 @@ const SHEETS=[{name:'매장재고',label:'매장'},{name:'지2창고',label:'지
 const RC={점장:'#1565c0',시니어:'#6a1b9a',주니어:'#2e7d32',파트:'#e65100'};
 const EC={store:'#c62828',task:'#1565c0',meet:'#7b1fa2',stock:'#2e7d32',clean:'#e65100',etc:'#5d4037'};
 const EL={store:'매장',task:'업무',meet:'미팅',stock:'재고',clean:'청소',etc:'기타'};
-const IN_TYPES=['주문','물'];
+const IN_TYPES=['주문','물','단체','권고','자동'];
 const OUT_TYPES=['자동','권고','요청','교환'];
 const PICKUP_TYPES=['NCP몰','네이버몰','자동','권고','요청','교환','주문'];
 
@@ -480,8 +492,23 @@ function renderTasks(){
     html+='</div></div>';
   }
 
-  // 매장 전체 과제
-  html+=mkTaskSection('store','매장 전체',ds,DB.tasks[ds].store||[],prev,null);
+  // 매장 전체 과제 — 미체크 이동/픽업 항목을 store 목록에 가상 추가
+  const storeItems=[...(DB.tasks[ds].store||[])];
+  if(isToday){
+    ['mv_in','mv_out','mv_pickup'].forEach(mvKey=>{
+      const mvData=DB[mvKey]||{};
+      const label=mvKey==='mv_in'?'이동입고':mvKey==='mv_out'?'이동출고':'제품픽업';
+      [todayStr,prevDs].forEach(checkDs=>{
+        const mvItems=(mvData[checkDs]||[]).filter(it=>!it.checked);
+        mvItems.forEach(it=>{
+          const isCarry=checkDs!==todayStr;
+          const txt=`[${label}] ${it.pno}${it.size?' ('+it.size+')':''}${it.qty?' x'+it.qty:''}${it.type?' / '+it.type:''}${isCarry?' ← 전날미완료':''}`;
+          storeItems.push({id:'__mv__'+it.id,text:txt,done:false,doneAt:null,_isMv:true});
+        });
+      });
+    });
+  }
+  html+=mkTaskSection('store','매장 전체',ds,storeItems,prev,null);
   DB.staff.forEach(s=>{
     if(!DB.tasks[ds].staff)DB.tasks[ds].staff={};
     if(!DB.tasks[ds].staff[s.id])DB.tasks[ds].staff[s.id]=[];
@@ -502,9 +529,9 @@ function mkTaskSection(type,label,ds,items,prev,sid){
 }
 function getItems(ds,type,sid){if(!DB.tasks[ds])DB.tasks[ds]={store:[],staff:{}};if(type==='store')return DB.tasks[ds].store;if(!DB.tasks[ds].staff)DB.tasks[ds].staff={};if(!DB.tasks[ds].staff[sid])DB.tasks[ds].staff[sid]=[];return DB.tasks[ds].staff[sid];}
 window.addTask=function(ds,type,sid,inpId){const el=document.getElementById(inpId);const txt=el.value.trim();if(!txt)return;getItems(ds,type,sid).push({id:'t'+Date.now(),text:txt,done:false,doneAt:null});el.value='';saveMain();renderTasks();};
-window.checkTask=function(ds,type,sid,id){const t=getItems(ds,type,sid).find(x=>x.id===id);if(!t)return;t.done=!t.done;if(t.done){const n=new Date();t.doneAt=p2(n.getHours())+':'+p2(n.getMinutes());}else t.doneAt=null;saveMain();renderTasks();};
+window.checkTask=function(ds,type,sid,id){const t=getItems(ds,type,sid).find(x=>x.id===id);if(!t||t._isMv)return;t.done=!t.done;if(t.done){const n=new Date();t.doneAt=p2(n.getHours())+':'+p2(n.getMinutes());}else t.doneAt=null;saveMain();renderTasks();};
 window.checkCarry=function(ds,type,sid,pid){const prevDs=fmt(new Date(new Date(ds+'T00:00:00').getTime()-86400000));const t=getItems(prevDs,type,sid).find(x=>x.id===pid);if(!t)return;t.done=!t.done;if(t.done){const n=new Date();t.doneAt=p2(n.getHours())+':'+p2(n.getMinutes());}else t.doneAt=null;saveMain();renderTasks();};
-window.delTask=function(ds,type,sid,id){const items=getItems(ds,type,sid);const i=items.findIndex(x=>x.id===id);if(i>-1)items.splice(i,1);saveMain();renderTasks();};
+window.delTask=function(ds,type,sid,id){if(id.startsWith('__mv__'))return;const items=getItems(ds,type,sid);const i=items.findIndex(x=>x.id===id);if(i>-1)items.splice(i,1);saveMain();renderTasks();};
 
 /* ── MOVEMENT COMMON ── */
 function getMvItems(key,ds){if(!DB[key])DB[key]={};if(!DB[key][ds])DB[key][ds]=[];return DB[key][ds];}
@@ -543,14 +570,15 @@ function mvInRow(i,ds,carry){
     <div class="mv-body">
       <div class="mv-main">
         <span class="mv-pno">${esc(i.pno)}</span>
+        ${i.size?`<span class="mv-chip">${esc(i.size)}</span>`:''}
         ${i.qty?`<span class="mv-chip">x${i.qty}</span>`:''}
         ${i.type?`<span class="type-chip type-${i.type}">${esc(i.type)}</span>`:''}
         ${i.store?`<span class="mv-chip">${esc(i.store)}</span>`:''}
         ${carry?'<span class="mv-carry-lbl">전날 미완료</span>':''}
       </div>
       <div class="mv-meta">
-        ${i.duedate?`<span class="bdg bdg-time">구한날짜: ${i.duedate}</span>`:''}
-        ${i.indate?`<span class="bdg bdg-time">입고날짜: ${i.indate}</span>`:''}
+        ${i.duedate?`<span class="bdg bdg-time">구한날: ${i.duedate}</span>`:''}
+        ${i.indate?`<span class="bdg bdg-time">입고예정일: ${i.indate}</span>`:''}
         ${i.checkedAt?`<span class="mv-done-time">완료 ${i.checkedAt}</span>`:''}
       </div>
     </div>
@@ -563,20 +591,22 @@ window.addMv=function(type){
   const ds=fmt(dates[type]);
   const item={id:'m'+Date.now(),pno,checked:false,checkedAt:null};
   if(type==='in'){
+    item.size=document.getElementById('in-size').value.trim()||'';
     item.qty=document.getElementById('in-qty').value||'';
     item.type=document.getElementById('in-type').value||'';
     item.store=document.getElementById('in-store').value.trim()||'';
     item.duedate=document.getElementById('in-duedate').value||'';
     item.indate=document.getElementById('in-indate').value||'';
-    ['in-qty','in-store','in-duedate','in-indate'].forEach(id=>{document.getElementById(id).value='';});
+    ['in-size','in-qty','in-store','in-duedate','in-indate'].forEach(id=>{document.getElementById(id).value='';});
     document.getElementById('in-type').selectedIndex=0;
   } else if(type==='out'){
+    item.size=document.getElementById('out-size').value.trim()||'';
     item.qty=document.getElementById('out-qty').value||'';
     item.type=document.getElementById('out-type').value||'';
     item.dong=document.getElementById('out-dong').value.trim()||'';
     item.waybill=document.getElementById('out-waybill').value.trim()||'';
     item.send=document.getElementById('out-send').value||'';
-    ['out-qty','out-dong','out-waybill'].forEach(id=>{document.getElementById(id).value='';});
+    ['out-size','out-qty','out-dong','out-waybill'].forEach(id=>{const el=document.getElementById(id);if(el)el.value='';});
     document.getElementById('out-type').selectedIndex=0;document.getElementById('out-send').selectedIndex=0;
   } else if(type==='pickup'){
     item.size=document.getElementById('pickup-size').value.trim()||'';
@@ -629,12 +659,13 @@ function mvOutRow(i,ds,carry){
     <div class="mv-body">
       <div class="mv-main">
         <span class="mv-pno">${esc(i.pno)}</span>
+        ${i.size?`<span class="mv-chip">${esc(i.size)}</span>`:''}
         ${i.qty?`<span class="mv-chip">x${i.qty}</span>`:''}
         ${i.type?`<span class="type-chip type-${i.type}">${esc(i.type)}</span>`:''}
         ${carry?'<span class="mv-carry-lbl">전날 미완료</span>':''}
       </div>
       <div class="mv-meta">
-        ${i.dong?`<span class="bdg bdg-time">동진: ${esc(i.dong)}</span>`:''}
+        ${i.dong?`<span class="bdg bdg-time">출고매장: ${esc(i.dong)}</span>`:''}
         ${i.send?`<span class="mv-chip">${esc(i.send)}</span>`:''}
         ${i.waybill?`<span class="bdg bdg-time">운송장: ${esc(i.waybill)}</span>`:''}
         ${i.checkedAt?`<span class="mv-done-time">완료 ${i.checkedAt}</span>`:''}
