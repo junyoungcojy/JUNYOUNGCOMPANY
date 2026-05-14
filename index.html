@@ -241,18 +241,10 @@ input:focus,select:focus{border-color:var(--text)}
         <input type="number" id="in-qty" placeholder="개수" min="1">
         <select id="in-type"><option value="">종류 선택</option><option>주문</option><option>물</option><option>단체</option><option>권고</option><option>자동</option></select>
       </div>
-      <div style="display:grid;grid-template-columns:1fr 1fr 1fr;gap:6px;margin-bottom:2px">
+      <div class="mv-grid mv-grid-2" style="margin-bottom:8px">
         <input type="text" id="in-store" placeholder="입고매장" style="margin:0">
-        <div>
-          <div style="font-size:10px;color:var(--text3);margin-bottom:3px;padding-left:2px">구한날</div>
-          <input type="date" id="in-duedate" style="margin:0">
-        </div>
-        <div>
-          <div style="font-size:10px;color:var(--text3);margin-bottom:3px;padding-left:2px">입고예정일</div>
-          <input type="date" id="in-indate" style="margin:0">
-        </div>
+        <input type="text" id="in-note" placeholder="메모(선택)" style="margin:0">
       </div>
-      <div style="margin-bottom:8px"></div>
       <button class="btn btn-dark" onclick="addMv('in')">등록</button>
     </div>
     <div id="in-list"></div>
@@ -556,7 +548,7 @@ function renderIn(){
   const ds=fmt(dates.in);
   const prevDs=fmt(new Date(new Date(ds+'T00:00:00').getTime()-86400000));
   const items=getMvItems('mv_in',ds);
-  const prevItems=getMvItems('mv_in',prevDs).filter(i=>!i.checked);
+  const prevItems=getMvItems('mv_in',prevDs).filter(i=>!(i.checked||(i.duedate&&i.indate)));
   const f=filters.in;
   const filtered=items.filter(i=>f==='전체'||i.type===f);
   const prevFiltered=prevItems.filter(i=>f==='전체'||i.type===f);
@@ -570,8 +562,11 @@ function renderIn(){
   document.getElementById('in-list').innerHTML=html;
 }
 function mvInRow(i,ds,carry){
-  return`<div class="mv-row ${carry?'carry':''}">
-    <div class="mv-chk ${i.checked?'done':''}" onclick="checkMv('mv_in','${ds}','${i.id}')"></div>
+  // 구한날+입고예정일 둘다 있으면 완료(checked)
+  const bothDates=i.duedate&&i.indate;
+  const isCompleted=i.checked||bothDates;
+  return`<div class="mv-row ${carry?'carry':''}" style="${isCompleted?'opacity:.5':''}">
+    <div class="mv-chk ${isCompleted?'done':''}" onclick="checkMv('mv_in','${ds}','${i.id}')"></div>
     <div class="mv-body">
       <div class="mv-main">
         <span class="mv-pno">${esc(i.pno)}</span>
@@ -579,6 +574,8 @@ function mvInRow(i,ds,carry){
         ${i.qty?`<span class="mv-chip">x${i.qty}</span>`:''}
         ${i.type?`<span class="type-chip type-${i.type}">${esc(i.type)}</span>`:''}
         ${i.store?`<span class="mv-chip">${esc(i.store)}</span>`:''}
+        ${i.note?`<span class="mv-chip">${esc(i.note)}</span>`:''}
+        ${isCompleted?'<span class="mv-done-time">✓ 완료</span>':''}
         ${carry?'<span class="mv-carry-lbl">전날 미완료</span>':''}
       </div>
       <div class="mv-meta">
@@ -586,6 +583,17 @@ function mvInRow(i,ds,carry){
         ${i.indate?`<span class="bdg bdg-time">입고예정일: ${i.indate}</span>`:''}
         ${i.checkedAt?`<span class="mv-done-time">완료 ${i.checkedAt}</span>`:''}
       </div>
+      ${!isCompleted?`<div class="in-date-update" style="display:flex;gap:5px;margin-top:7px;flex-wrap:wrap;align-items:center">
+        <div style="font-size:10px;color:var(--text3);width:100%;margin-bottom:2px">📅 날짜 입력하면 완료처리:</div>
+        <div style="flex:1;min-width:120px">
+          <div style="font-size:9px;color:var(--text3);margin-bottom:2px">구한날</div>
+          <input type="date" id="in-due-${i.id}" style="font-size:11px;padding:4px 7px;margin:0" onchange="updateInDate('${ds}','${i.id}')">
+        </div>
+        <div style="flex:1;min-width:120px">
+          <div style="font-size:9px;color:var(--text3);margin-bottom:2px">입고예정일</div>
+          <input type="date" id="in-ind-${i.id}" style="font-size:11px;padding:4px 7px;margin:0" onchange="updateInDate('${ds}','${i.id}')">
+        </div>
+      </div>`:''}
     </div>
     <button class="mv-del" onclick="delMv('mv_in','${ds}','${i.id}')">✕</button>
   </div>`;
@@ -600,9 +608,10 @@ window.addMv=function(type){
     item.qty=document.getElementById('in-qty').value||'';
     item.type=document.getElementById('in-type').value||'';
     item.store=document.getElementById('in-store').value.trim()||'';
-    item.duedate=document.getElementById('in-duedate').value||'';
-    item.indate=document.getElementById('in-indate').value||'';
-    ['in-size','in-qty','in-store','in-duedate','in-indate'].forEach(id=>{document.getElementById(id).value='';});
+    item.note=document.getElementById('in-note').value.trim()||'';
+    item.duedate='';
+    item.indate='';
+    ['in-size','in-qty','in-store','in-note'].forEach(id=>{document.getElementById(id).value='';});
     document.getElementById('in-type').selectedIndex=0;
   } else if(type==='out'){
     item.size=document.getElementById('out-size').value.trim()||'';
@@ -632,6 +641,21 @@ window.checkMv=function(key,ds,id){
   if(i.checked){const n=new Date();i.checkedAt=p2(n.getHours())+':'+p2(n.getMinutes());}else i.checkedAt=null;
   saveMain();
   const type=key.replace('mv_','');renderMv(type);renderTasks();
+};
+window.updateInDate=function(ds,id){
+  const dueEl=document.getElementById('in-due-'+id);
+  const indEl=document.getElementById('in-ind-'+id);
+  if(!dueEl||!indEl)return;
+  const items=getMvItems('mv_in',ds);
+  const i=items.find(x=>x.id===id);if(!i)return;
+  if(dueEl.value)i.duedate=dueEl.value;
+  if(indEl.value)i.indate=indEl.value;
+  // 둘 다 입력됐으면 완료
+  if(i.duedate&&i.indate){
+    i.checked=true;
+    const n=new Date();i.checkedAt=p2(n.getHours())+':'+p2(n.getMinutes());
+  }
+  saveMain();renderIn();renderTasks();
 };
 window.checkMvDual=function(key,ds,id,which){
   const items=getMvItems(key,ds);const i=items.find(x=>x.id===id);if(!i)return;
