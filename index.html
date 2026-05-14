@@ -183,6 +183,14 @@ input:focus,select:focus{border-color:var(--text)}
 .type-NCP몰{background:rgba(0,150,136,.1);color:#00695c}
 .type-네이버몰{background:rgba(27,94,32,.1);color:#1b5e20}
 .mv-section-empty{font-size:11px;color:var(--text3);padding:10px 0}
+.mv-chks{display:flex;flex-direction:column;gap:4px;flex-shrink:0;margin-top:1px}
+.mv-chk-wrap{display:flex;align-items:center;gap:3px}
+.mv-chk-lbl{font-size:9px;color:var(--text3);white-space:nowrap}
+.mv-chk{width:17px;height:17px;border-radius:3px;border:1.5px solid var(--border2);background:none;cursor:pointer;flex-shrink:0;display:flex;align-items:center;justify-content:center;position:relative;transition:all .15s}
+.mv-chk.done{background:var(--green);border-color:var(--green)}
+.mv-chk.done::after{content:'✓';color:#fff;font-size:10px;font-weight:700;line-height:1}
+.mv-chk.disabled{background:var(--text);border-color:var(--text);cursor:default}
+.mv-chk.all-done{background:var(--green);border-color:var(--green)}
 </style>
 </head>
 <body>
@@ -267,11 +275,8 @@ input:focus,select:focus{border-color:var(--text)}
         <input type="number" id="out-qty" placeholder="개수" min="1">
         <select id="out-type"><option value="">종류 선택</option><option>자동</option><option>권고</option><option>요청</option><option>교환</option></select>
       </div>
-      <div class="mv-grid mv-grid-2" style="margin-bottom:6px">
+      <div class="mv-grid mv-grid-3" style="margin-bottom:8px">
         <input type="text" id="out-dong" placeholder="출고매장" style="margin:0">
-        <input type="text" id="out-waybill2" placeholder="운송장번호(동진및택배)" style="margin:0">
-      </div>
-      <div class="mv-grid mv-grid-2" style="margin-bottom:8px">
         <input type="text" id="out-waybill" placeholder="운송장번호(동진및택배)" style="margin:0">
         <select id="out-send" style="margin:0"><option value="">동진or택배</option><option>동진</option><option>택배</option></select>
       </div>
@@ -628,6 +633,19 @@ window.checkMv=function(key,ds,id){
   saveMain();
   const type=key.replace('mv_','');renderMv(type);renderTasks();
 };
+window.checkMvDual=function(key,ds,id,which){
+  const items=getMvItems(key,ds);const i=items.find(x=>x.id===id);if(!i)return;
+  const noJeonsanTypes=['자동','권고'];
+  const noJeonsan=noJeonsanTypes.includes(i.type||'');
+  if(which==='dong'){i.chkDong=!i.chkDong;}
+  else if(which==='jeonsan'&&!noJeonsan){i.chkJeonsan=!i.chkJeonsan;}
+  // 완료 판정
+  const allDone=i.chkDong&&(i.chkJeonsan||noJeonsan);
+  i.checked=allDone;
+  if(allDone&&!i.checkedAt){const n=new Date();i.checkedAt=p2(n.getHours())+':'+p2(n.getMinutes());}
+  else if(!allDone){i.checkedAt=null;}
+  saveMain();const type=key.replace('mv_','');renderMv(type);renderTasks();
+};
 window.delMv=function(key,ds,id){
   const items=getMvItems(key,ds);const idx=items.findIndex(x=>x.id===id);if(idx>-1)items.splice(idx,1);
   saveMain();const type=key.replace('mv_','');renderMv(type);renderTasks();
@@ -640,7 +658,10 @@ function renderOut(){
   const ds=fmt(dates.out);
   const prevDs=fmt(new Date(new Date(ds+'T00:00:00').getTime()-86400000));
   const items=getMvItems('mv_out',ds);
-  const prevItems=getMvItems('mv_out',prevDs).filter(i=>!i.checked);
+  const prevItems=getMvItems('mv_out',prevDs).filter(i=>{
+    const noJ=['자동','권고'].includes(i.type||'');
+    return !(i.chkDong&&(i.chkJeonsan||noJ));
+  });
   const f=filters.out;
   const filtered=items.filter(i=>f==='전체'||i.type===f);
   const prevFiltered=prevItems.filter(i=>f==='전체'||i.type===f);
@@ -654,14 +675,35 @@ function renderOut(){
   document.getElementById('out-list').innerHTML=html;
 }
 function mvOutRow(i,ds,carry){
-  return`<div class="mv-row ${carry?'carry':''}">
-    <div class="mv-chk ${i.checked?'done':''}" onclick="checkMv('mv_out','${ds}','${i.id}')"></div>
+  // 자동/권고는 전산등록 불필요 → disabled(꽉찬 도형)
+  const noJeonsanTypes=['자동','권고'];
+  const noJeonsan=noJeonsanTypes.includes(i.type||'');
+  // 전산등록 체크 상태
+  const chkDong=i.chkDong||false;
+  const chkJeonsan=i.chkJeonsan||false;
+  // 완료: 동진체크 AND (전산체크 OR 자동/권고)
+  const allDone=chkDong&&(chkJeonsan||noJeonsan);
+  return`<div class="mv-row ${carry?'carry':''}" style="${allDone?'opacity:.55':''}">
+    <div class="mv-chks">
+      <div class="mv-chk-wrap">
+        <div class="mv-chk ${chkDong?'done':''}" onclick="checkMvDual('mv_out','${ds}','${i.id}','dong')" title="동진등록"></div>
+        <span class="mv-chk-lbl">동진</span>
+      </div>
+      <div class="mv-chk-wrap">
+        ${noJeonsan
+          ? `<div class="mv-chk disabled" title="자동/권고는 전산등록 불필요" style="cursor:default"></div>`
+          : `<div class="mv-chk ${chkJeonsan?'done':''}" onclick="checkMvDual('mv_out','${ds}','${i.id}','jeonsan')" title="전산등록"></div>`
+        }
+        <span class="mv-chk-lbl">전산</span>
+      </div>
+    </div>
     <div class="mv-body">
       <div class="mv-main">
         <span class="mv-pno">${esc(i.pno)}</span>
         ${i.size?`<span class="mv-chip">${esc(i.size)}</span>`:''}
         ${i.qty?`<span class="mv-chip">x${i.qty}</span>`:''}
         ${i.type?`<span class="type-chip type-${i.type}">${esc(i.type)}</span>`:''}
+        ${allDone?'<span class="mv-done-time">✓ 완료</span>':''}
         ${carry?'<span class="mv-carry-lbl">전날 미완료</span>':''}
       </div>
       <div class="mv-meta">
