@@ -505,29 +505,8 @@ function renderTasks(){
     html+='</div></div>';
   }
 
-  // 매장 전체 과제 — 미체크 이동/픽업 항목을 store 목록에 가상 추가
+  // 매장 전체 과제
   const storeItems=[...(DB.tasks[ds].store||[])];
-  if(isToday){
-    ['mv_in','mv_out','mv_pickup'].forEach(mvKey=>{
-      const mvData=DB[mvKey]||{};
-      const label=mvKey==='mv_in'?'이동입고':mvKey==='mv_out'?'이동출고':'제품픽업';
-      const cdates=[todayStr];
-      if(mvKey==='mv_in'){Object.keys(mvData).sort().forEach(d=>{if(d<todayStr)cdates.push(d);});}
-      else{for(let k=1;k<=3;k++)cdates.push(fmt(new Date(new Date(todayStr+'T00:00:00').getTime()-k*86400000)));}
-      cdates.forEach(checkDs=>{
-        const mvItems=(mvData[checkDs]||[]).filter(it=>{
-          if(mvKey==='mv_out'){const noJ=['자동','권고'].includes(it.type||'');return !(it.chkDong&&(it.chkJeonsan||noJ));}
-          if(mvKey==='mv_in') return !(it.checked||(it.store&&it.duedate&&it.indate));
-          return !it.checked;
-        });
-        mvItems.forEach(it=>{
-          const isCarry=checkDs!==todayStr;
-          const txt=`[${label}] ${it.pno}${it.size?' ('+it.size+')':''}${it.qty?' x'+it.qty:''}${it.type?' / '+it.type:''}${isCarry?' ← '+checkDs+' 미완료':''}`;
-          storeItems.push({id:'__mv__'+it.id+'_'+checkDs,text:txt,done:false,doneAt:null,_isMv:true});
-        });
-      });
-    });
-  }
   html+=mkTaskSection('store','매장 전체',ds,storeItems,prev,null);
   DB.staff.forEach(s=>{
     if(!DB.tasks[ds].staff)DB.tasks[ds].staff={};
