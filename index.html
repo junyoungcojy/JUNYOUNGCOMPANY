@@ -285,6 +285,15 @@ input:focus,select:focus{border-color:var(--text)}
       <button class="nav-btn" onclick="chDay('pickup',1)">›</button>
     </div>
     <div class="mv-filter-row" id="pickup-filter-row"></div>
+    <div style="display:flex;gap:6px;margin-bottom:8px">
+      <div style="position:relative;flex:1">
+        <span style="position:absolute;left:10px;top:50%;transform:translateY(-50%);font-size:13px;pointer-events:none">🔍</span>
+        <input type="text" id="pickup-search" placeholder="품번 검색..." style="padding-left:34px;margin:0" onkeydown="if(event.key==='Enter')doPickupSearch()">
+      </div>
+      <button class="btn btn-dark" onclick="doPickupSearch()" style="padding:8px 14px;white-space:nowrap">검색</button>
+      <button class="btn" onclick="clearPickupSearch()" style="padding:8px 10px;color:var(--text3)" title="초기화">✕</button>
+    </div>
+    <div id="pickup-search-result" style="margin-bottom:8px"></div>
     <div class="mv-add-form">
       <div class="mv-add-form-title">+ 제품픽업 등록</div>
       <div class="mv-grid mv-grid-4" style="margin-bottom:6px">
@@ -354,9 +363,13 @@ input:focus,select:focus{border-color:var(--text)}
 
   <!-- 재고 관리 -->
   <div id="panel-inventory" class="panel">
-    <div class="inv-search-wrap">
-      <span class="inv-s-icon">🔍</span>
-      <input type="text" id="inv-search" placeholder="전체 창고 검색 — 품번, 컬러, 사이즈..." oninput="searchInv()">
+    <div style="display:flex;gap:6px;margin-bottom:10px">
+      <div class="inv-search-wrap" style="flex:1;margin-bottom:0">
+        <span class="inv-s-icon">🔍</span>
+        <input type="text" id="inv-search" placeholder="전체 창고 검색 — 품번, 컬러, 사이즈..." onkeydown="if(event.key==='Enter')searchInv()">
+      </div>
+      <button class="btn btn-dark" onclick="searchInv()" style="padding:8px 14px;white-space:nowrap">검색</button>
+      <button class="btn" onclick="clearInvSearch()" style="padding:8px 10px;color:var(--text3)" title="초기화">✕</button>
     </div>
     <div id="inv-search-results"></div>
     <div class="inv-tabs" id="inv-tabs"></div>
@@ -810,6 +823,35 @@ function renderPickup(){
   if(!filtered.length&&!prev3Pickup.length)html='<div class="mv-section-empty">등록된 제품픽업 없음</div>';
   document.getElementById('pickup-list').innerHTML=html;
 }
+function hlPick(text,sq){if(!sq)return esc(text);return esc(text).replace(new RegExp('('+sq.replace(/[.*+?^${}()|[\]\\]/g,'\\$&')+')','gi'),'<mark class="hl">$1</mark>');}
+window.doPickupSearch=function(){
+  const sq=(document.getElementById('pickup-search').value||'').trim();
+  const res=document.getElementById('pickup-search-result');
+  if(!sq){res.innerHTML='';return;}
+  const sqL=sq.toLowerCase();
+  function match(i){return[i.pno,i.size,i.type,i.loc,i.note].some(v=>String(v||'').toLowerCase().includes(sqL));}
+  // 전체 날짜에서 검색
+  const found=[];
+  const allDates=Object.keys(DB.mv_pickup||{}).sort().reverse();
+  allDates.forEach(ds=>{
+    const matched=(DB.mv_pickup[ds]||[]).filter(match);
+    if(matched.length)found.push({ds,items:matched});
+  });
+  if(!found.length){res.innerHTML=`<div style="background:var(--bg2);border-radius:8px;padding:10px;font-size:12px;color:var(--text3)">검색 결과 없음: "${esc(sq)}"</div>`;return;}
+  const total=found.reduce((a,f)=>a+f.items.length,0);
+  let html=`<div style="background:var(--bg);border:0.5px solid var(--border);border-radius:10px;padding:12px;margin-bottom:4px">`;
+  html+=`<div style="font-size:11px;font-weight:600;color:var(--blue);margin-bottom:8px">🔍 "${esc(sq)}" 검색결과 — ${total}건</div>`;
+  found.forEach(({ds,items})=>{
+    html+=`<div style="font-size:10px;color:var(--text3);margin:6px 0 3px;font-weight:500">${ds} (${dow(ds)})</div>`;
+    items.forEach(i=>{html+=mvPickupRowHL(i,ds,sq);});
+  });
+  html+=`</div>`;
+  res.innerHTML=html;
+};
+window.clearPickupSearch=function(){
+  document.getElementById('pickup-search').value='';
+  document.getElementById('pickup-search-result').innerHTML='';
+};
 function mvPickupRow(i,ds,carry){
   return`<div class="mv-row ${carry?'carry':''}">
     <div class="mv-chk ${i.checked?'done':''}" onclick="checkMv('mv_pickup','${ds}','${i.id}')"></div>
@@ -828,6 +870,27 @@ function mvPickupRow(i,ds,carry){
       </div>
     </div>
     <button class="mv-del" onclick="delMv('mv_pickup','${ds}','${i.id}')">✕</button>
+  </div>`;
+}
+function mvPickupRowHL(i,ds,sq){
+  const done=i.checked;
+  return`<div class="mv-row" style="${done?'opacity:.5':''}">
+    <div class="mv-chk ${done?'done':''}" onclick="checkMv('mv_pickup','${ds}','${i.id}');doPickupSearch()"></div>
+    <div class="mv-body">
+      <div class="mv-main">
+        <span class="mv-pno">${hlPick(i.pno,sq)}</span>
+        ${i.size?`<span class="mv-chip">${hlPick(i.size,sq)}</span>`:''}
+        ${i.qty?`<span class="mv-chip">x${i.qty}</span>`:''}
+        ${i.type?`<span class="type-chip type-${i.type}">${hlPick(i.type,sq)}</span>`:''}
+        ${done?'<span class="mv-done-time">✓ 완료</span>':''}
+      </div>
+      <div class="mv-meta">
+        ${i.loc?`<span class="bdg bdg-time">창고: ${hlPick(i.loc,sq)}</span>`:''}
+        ${i.note?`<span class="mv-chip">${hlPick(i.note,sq)}</span>`:''}
+        ${i.checkedAt?`<span class="mv-done-time">완료 ${i.checkedAt}</span>`:''}
+      </div>
+    </div>
+    <button class="mv-del" onclick="delMv('mv_pickup','${ds}','${i.id}');doPickupSearch()">✕</button>
   </div>`;
 }
 
@@ -921,6 +984,10 @@ function renderInvTable(headers,rows,kw){
   if(kw&&cnt===0)return`<div style="text-align:center;padding:12px;font-size:12px;color:var(--text3)">결과 없음</div>`;
   return html;
 }
+window.clearInvSearch=function(){
+  document.getElementById('inv-search').value='';
+  document.getElementById('inv-search-results').innerHTML='';
+};
 window.searchInv=function(){
   const q=document.getElementById('inv-search').value.trim(),res=document.getElementById('inv-search-results');
   if(!q){res.innerHTML='';return;}
